@@ -1,0 +1,35 @@
+---
+- name: Install Ubuntu Packages
+  include_tasks: install_ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install Debian Packages
+  include_tasks: install_debian.yml
+  when: ansible_distribution == "Debian"
+
+- name: Install CentOS/RHEL Packages
+  include_tasks: install_centos.yml
+  when: ansible_distribution == "RedHat"
+
+- name: Enable ZeroTier Service
+  service:
+    name: zerotier-one
+    state: started
+    enabled: yes
+
+- name: Wait for ZeroTier to generate identity
+  wait_for:
+    path: /var/lib/zerotier-one/identity.secret
+
+- name: Setup ZeroTier Network 
+  zerotier:
+    name: "{{item.key}}"
+    apikey: "{{item.value.apikey | default('')}}"
+    nodename: "{{item.value.nodename | default(inventory_hostname)}}"
+    nodedescription: "{{item.value.nodedescription | default('')}}"
+    config: "{{item.value.config | default('{}')}}"
+    hidden: "{{item.value.hidden | default(False)}}"
+    joined: "{{item.value.joined| default(True)}}"
+  loop: "{{lookup('dict', zerotier_networks, wantlist=True)}}"
+  loop_control:
+    label: "{{ item.key }}"

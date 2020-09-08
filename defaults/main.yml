@@ -1,0 +1,6 @@
+zerotier_repo:
+  gpg: https://raw.githubusercontent.com/zerotier/ZeroTierOne/master/doc/contact%40zerotier.com.gpg
+  base_url_ubuntu: https://download.zerotier.com/debian/
+
+zerotier_version: 1.4.6
+
