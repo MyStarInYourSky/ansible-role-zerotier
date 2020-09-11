@@ -1,0 +1,12 @@
+before_script:
+  - docker info
+  - export GEM_HOME=$HOME/.gem
+  - export PATH=$PATH:$HOME/.gem/bin
+
+stages:
+  - tests
+
+kitchen-sink:
+  stage: tests
+  script:
+    - bundle install
