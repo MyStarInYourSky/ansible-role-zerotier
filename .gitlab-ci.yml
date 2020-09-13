@@ -1,9 +1,9 @@
 before_script:
   - docker info
-  - export GEM_HOME=$HOME/.gem
-  - export PATH=$PATH:$HOME/.gem/bin
+  - export GEM_HOME=/home/gitlab-runner/.gem
+  - export PATH=/home/gitlab-runner/.gem/bin/:$PATH
   - source "/etc/profile.d/rvm.sh"
-
+  -
 stages:
   - tests
 
