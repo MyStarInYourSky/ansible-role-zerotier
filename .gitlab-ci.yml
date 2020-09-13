@@ -2,6 +2,7 @@ before_script:
   - docker info
   - export GEM_HOME=$HOME/.gem
   - export PATH=$PATH:$HOME/.gem/bin
+  - source "/etc/profile.d/rvm.sh"
 
 stages:
   - tests
@@ -9,4 +10,5 @@ stages:
 kitchen-sink:
   stage: tests
   script:
+    - rvm install ruby-2.7
     - bundle install
