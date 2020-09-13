@@ -1,3 +1,7 @@
+variables:
+   GEM_HOME: /home/gitlab-runner/.gem
+   PATH: /home/gitlab-runner/.gem/bin/:$PATH
+
 before_script:
   - docker info
 
@@ -7,8 +11,6 @@ stages:
 kitchen-sink:
   stage: tests
   script:
-    - export GEM_HOME=/home/gitlab-runner/.gem
-    - export PATH=/home/gitlab-runner/.gem/bin/:$PATH
     - source "/etc/profile.d/rvm.sh"
     - rvm install ruby-2.7
     - bundle install
