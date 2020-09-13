@@ -3,7 +3,7 @@ before_script:
   - export GEM_HOME=/home/gitlab-runner/.gem
   - export PATH=/home/gitlab-runner/.gem/bin/:$PATH
   - source "/etc/profile.d/rvm.sh"
-  -
+
 stages:
   - tests
 
