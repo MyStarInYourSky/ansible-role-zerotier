@@ -1,8 +1,7 @@
 before_script:
   - docker info
-  - rvmsudo rvm get stable --auto-dotfiles
-  - rvm fix-permissions system
   - rvm install ruby-2.7
+  - rvm use ruby-2.7
 stages:
   - tests
 
