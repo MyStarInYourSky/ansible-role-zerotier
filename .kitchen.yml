@@ -8,11 +8,17 @@ provisioner:
   playbook: default.yml
   roles_path: roles
   hosts: all
+  ansible_binary_path: /usr/local/bin
+  require_pip3: true
 
 platforms:
   - name: ubuntu
     driver_config:
       image: ubuntu:18.04
+      cap_add:
+        - NET_ADMIN
+      devices:
+        - /dev/net/tun
 
 suites:
   - name: default
