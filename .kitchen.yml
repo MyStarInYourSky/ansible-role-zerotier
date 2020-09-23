@@ -1,0 +1,17 @@
+---
+driver:
+  name: docker
+  use_sudo: false
+
+provisioner:
+  name: ansible_playbook
+  playbook: default.yml
+  hosts: all
+
+platforms:
+  - name: ubuntu
+    driver_config:
+      image: ubuntu:18.04
+
+suites:
+  - name: default

@@ -2,6 +2,9 @@ before_script:
   - docker info
   - rvm install ruby-2.7
   - rvm use ruby-2.7
+  - mkdir roles
+  - ln -s . roles/zerotier
+  - j2 default.yml.j2 default.yml
 stages:
   - tests
 
@@ -9,3 +12,4 @@ kitchen-sink:
   stage: tests
   script:
     - bundle install
+    - bundle exec kitchen test
