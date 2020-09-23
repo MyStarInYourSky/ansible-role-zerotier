@@ -10,6 +10,7 @@ provisioner:
   hosts: all
   ansible_binary_path: /usr/local/bin
   require_pip3: true
+  require_chef_for_busser: false
 
 platforms:
   - name: ubuntu
@@ -19,6 +20,9 @@ platforms:
         - NET_ADMIN
       devices:
         - /dev/net/tun
+      provision_command:
+        - apt-get update
+        - apt-get install python3 pip3
 
 suites:
   - name: default
