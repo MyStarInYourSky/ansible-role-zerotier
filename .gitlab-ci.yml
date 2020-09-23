@@ -4,7 +4,7 @@ before_script:
   - rvm use ruby-2.7
   - mkdir roles
   - ln -s . roles/zerotier
-  - j2 default.yml.j2 default.yml
+  - j2 default.yml.j2 -o default.yml
 stages:
   - tests
 
