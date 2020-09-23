@@ -2,8 +2,11 @@ before_script:
   - docker info
   - rvm install ruby-2.7
   - rvm use ruby-2.7
-  - mkdir roles
-  - ln -s . roles/zerotier
+  - mkdir -p roles/zerotier
+  - mv defaults/ roles/zerotier/defaults
+  - mv handlers/ roles/zerotier/handlers
+  - mv library/ roles/zerotier/library
+  - mv tasks/ roles/zerotier/tasks
   - j2 default.yml.j2 -o default.yml
 stages:
   - tests

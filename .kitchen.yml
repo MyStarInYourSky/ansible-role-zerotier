@@ -6,7 +6,7 @@ driver:
 provisioner:
   name: ansible_playbook
   playbook: default.yml
-  hosts: all
+  roles_path: roles
 
 platforms:
   - name: ubuntu
