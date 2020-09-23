@@ -1,6 +1,5 @@
 before_script:
   - docker info
-  - rvm install ruby-2.7
   - rvm use ruby-2.7
   - mkdir -p roles/zerotier
   - mv defaults/ roles/zerotier/defaults
