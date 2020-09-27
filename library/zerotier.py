@@ -188,7 +188,7 @@ class ZeroTierNode(object):
             elif raw_resp.getcode() == 200:
                 return True
         except Exception as e:
-            self.module.fail_json(changed=False, msg="Unable to set config of ZeroTier node", reason=str(e))
+            self.module.fail_json(changed=False, msg="Unable to set config of ZeroTier node " + self.node, reason=str(e))
 
     def getNodeConfig(self):
         """
@@ -206,7 +206,7 @@ class ZeroTierNode(object):
                 resp = json.loads(raw_resp.read())
                 return resp
         except Exception as e:
-            self.module.fail_json(changed=False, msg="Unable to get config of ZeroTier node", reason=str(e))
+            self.module.fail_json(changed=False, msg="Unable to get config of ZeroTier node " + self.node, reason=str(e))
 
     def buildNodeConfig(self):
         current_full_node_config = self.getNodeConfig()
