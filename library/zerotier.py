@@ -93,6 +93,7 @@ import os
 import socket
 import shutil
 import json
+import time
 
 from ansible.module_utils._text import to_bytes
 from ansible.module_utils.basic import AnsibleModule
@@ -284,6 +285,7 @@ def main():
     zerotier = ZeroTierNode(module)
     # Set Join or not joined
     zerotier.applyJoinStatus()
+    time.sleep(15)
 
     if zerotier.joined:
         # Check if API Key is valid for the specified network
