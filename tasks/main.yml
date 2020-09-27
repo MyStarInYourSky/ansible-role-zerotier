@@ -17,7 +17,7 @@
   register: inside_docker
 
 - name: Start Zerotier Service (Docker)
-  shell: service docker start && /bin/bash
+  shell: service zerotier-one start && /bin/bash
   when: inside_docker.stat.exists
 
 - name: Enable ZeroTier Service
