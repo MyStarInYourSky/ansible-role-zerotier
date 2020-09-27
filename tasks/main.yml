@@ -12,10 +12,9 @@
   when: ansible_distribution == "RedHat"
 
 - name: Enable ZeroTier Service
-  service:
+  systemd:
     name: zerotier-one
     state: started
-    pattern: /usr/sbin/zerotier-one
     enabled: yes
 
 - name: Wait for ZeroTier to generate identity
