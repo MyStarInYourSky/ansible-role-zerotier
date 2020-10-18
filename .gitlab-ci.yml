@@ -7,6 +7,7 @@ before_script:
   - mv defaults/ roles/zerotier/defaults
   - mv library/ roles/zerotier/library
   - mv tasks/ roles/zerotier/tasks
+  - mv vars/ roles/zerotier/vars
   - j2 default.yml.j2 -o default.yml
 stages:
   - tests
