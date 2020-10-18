@@ -11,11 +11,21 @@
   include_tasks: install_centos.yml
   when: ansible_distribution == "RedHat"
 
+- name: Check if we are running in Docker
+  stat:
+    path: /.dockerenv
+  register: inside_docker
+
+- name: Start Zerotier Service (Docker)
+  shell: service zerotier-one start && /bin/bash
+  when: inside_docker.stat.exists
+
 - name: Enable ZeroTier Service
-  service:
+  systemd:
     name: zerotier-one
     state: started
     enabled: yes
+  when: not inside_docker.stat.exists
 
 - name: Wait for ZeroTier to generate identity
   wait_for:

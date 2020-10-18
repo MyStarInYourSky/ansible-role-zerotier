@@ -1,0 +1,28 @@
+---
+driver:
+  name: docker
+  use_sudo: false
+
+provisioner:
+  name: ansible_playbook
+  playbook: default.yml
+  roles_path: roles
+  hosts: all
+  ansible_binary_path: /usr/local/bin
+  require_pip3: true
+  require_chef_for_busser: false
+
+platforms:
+  - name: ubuntu
+    driver_config:
+      image: ubuntu:18.04
+      cap_add:
+        - NET_ADMIN
+      devices:
+        - /dev/net/tun
+      provision_command:
+        - apt-get update
+        - apt-get -y install python3-minimal python3-pip
+
+suites:
+  - name: default

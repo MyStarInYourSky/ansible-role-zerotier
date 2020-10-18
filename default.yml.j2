@@ -1,0 +1,12 @@
+---
+- hosts: all
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - role: zerotier
+      zerotier_networks:
+        0cccb752f733a00e:
+          apikey: {{ ZT_TEST_APIKEY }}
+          config:
+            authorized: True
+          hidden: False
