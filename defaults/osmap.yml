@@ -1,0 +1,5 @@
+os_map:
+  focal:
+    zerotier_deb_url: deb https://download.zerotier.com/debian/focal focal main
+  bionic:
+    zerotier_deb_url: deb https://download.zerotier.com/debian/bionic bionic main
