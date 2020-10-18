@@ -3,8 +3,7 @@
   apt:
     update_cache: yes
     state: present
-    pkg:
-      - gpg
+    pkg: {{osmap['ubuntu'][ansible_distribution_release]['packages']}}
 - name: Add Zerotier GPG Key
   apt_key:
     url: "{{zerotier_repo['gpg']}}"
@@ -12,7 +11,7 @@
 
 - name: Add Zerotier Repo
   apt_repository:
-    repo: "deb {{zerotier_repo['base_url_ubuntu']}}{{ansible_distribution_release}} {{ansible_distribution_release}} main"
+    repo: "{{osmap['ubuntu'][ansible_distribution_release]['zerotier_deb_url']}}"
 
 - name: Install ZeroTier
   apt:
