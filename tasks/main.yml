@@ -1,4 +1,8 @@
 ---
+- name: Include vars of stuff.yaml into the 'stuff' variable (2.2).
+  include_vars:
+    file: osmap.yaml
+    name: osmap
 - name: Install Ubuntu Packages
   include_tasks: install_ubuntu.yml
   when: ansible_distribution == "Ubuntu"

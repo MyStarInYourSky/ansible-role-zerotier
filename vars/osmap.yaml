@@ -1,0 +1,9 @@
+ubuntu:
+  focal:
+    zerotier_deb_url: deb https://download.zerotier.com/debian/bionic bionic main
+    packages:
+      - gpg
+  bionic:
+    zerotier_deb_url: deb https://download.zerotier.com/debian/bionic bionic main
+    packages:
+      - gpg
