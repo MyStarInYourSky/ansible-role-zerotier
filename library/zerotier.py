@@ -102,16 +102,7 @@ from ansible.module_utils.urls import open_url
 
 class ZeroTierNode(object):
     """
-    This is a generic User manipulation class that is subclassed
-    based on platform.
-    A subclass may wish to override the following action methods:-
-      - create_user()
-      - remove_user()
-      - modify_user()
-      - ssh_key_gen()
-      - ssh_key_fingerprint()
-      - user_exists()
-    All subclasses MUST define platform and distribution (which may be None).
+    Zerotier manipulation class
     """
 
     def __init__(self, module):
