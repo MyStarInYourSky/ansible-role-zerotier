@@ -134,19 +134,15 @@ class ZeroTierNode(object):
         """
         Gets local ZeroTier Network ID
         """
-        fh = open('/var/lib/zerotier-one/identity.public', 'r')
-        node = fh.readline().split(":")[0]
-        fh.close()
+        with open('/var/lib/zerotier-one/identity.public', 'r') as fh:
+            node = fh.readline().split(":")[0]
         return node
 
     def getJoinStatus(self):
         """
         Checks if node has joined the target network
         """
-        if os.path.exists("/var/lib/zerotier-one/networks.d/" + self.network + '.conf'):
-          return True
-        else:
-          return False
+        return os.path.exists("/var/lib/zerotier-one/networks.d/" + self.network + '.conf')
 
     def joinNetwork(self):
         """
@@ -168,7 +164,7 @@ class ZeroTierNode(object):
         """
         Sets node configuration
         """
-        api_url = self.api_url + '/api/network/' + self.network + '/member/' + self.node
+        api_url = f"{self.api_url}/api/network/{self.network}/member/{self.node}"
         api_auth = {'Authorization': 'bearer ' + self.apikey, 'Content-Type': 'application/json'}
         config_json = json.dumps(config)
         try:
