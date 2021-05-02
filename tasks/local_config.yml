@@ -1,0 +1,16 @@
+---
+- name: Build local config
+  template:
+    src: local.conf.j2
+    dest: /var/lib/zerotier-one/local.conf
+    owner: zerotier-one
+    group: zerotier-one
+    mode: 0644
+  register: local_config
+
+- name: Enable ZeroTier Service
+  systemd:
+    name: zerotier-one
+    state: restarted
+    enabled: yes
+  when: local_config.changed
