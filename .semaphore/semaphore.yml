@@ -29,4 +29,4 @@ blocks:
             - pip3 install -r molecule/requirements.txt
             - export PATH=$PATH:/home/semaphore/.local/bin
             - molecule lint
-            - molecule create
+            - molecule test
