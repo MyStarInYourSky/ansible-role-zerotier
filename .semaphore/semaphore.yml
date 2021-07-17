@@ -1,0 +1,37 @@
+version: v1.0
+name: Docker Build
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: Test
+    task:
+      env_vars:
+        - name: VAGRANT_VERSION
+          value: "2.2.14"
+        - name: VIRTUALBOX_MAIN_VERSION
+          value: "6.1"
+        - name: VIRTUALBOX_MINOR_VERSION
+          value: "6.1.18"
+      jobs:
+        - name: 'Test Playbook'
+          commands:
+            - checkout
+            - wget "https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
+            - unzip "vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
+            - rm "vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
+            - sudo mv vagrant /usr/local/bin/vagrant
+            - echo 'deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian bionic contrib' | sudo tee /etc/apt/sources.list.d/virtualbox.list
+            - wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
+            - wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
+            - sudo add-apt-repository -y  ppa:ubuntu-toolchain-r/test
+            - sudo apt-get update
+            - sudo apt-get -y install gcc-9
+            - sudo update-alternatives --remove-all gcc
+            - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 50
+            - sudo apt-get -y install virtualbox-${VIRTUALBOX_MAIN_VERSION}=${VIRTUALBOX_MINOR_VERSION}\*
+            - wget https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
+            - echo "y" | sudo VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
+            - rm Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
+            - pip3 install molecule[lint] molecule-vagrant ansible==2.9.0
