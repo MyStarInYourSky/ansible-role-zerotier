@@ -10,8 +10,8 @@ blocks:
       env_vars:
         - name: VAGRANT_VERSION
           value: "2.2.14"
-        - name: VIRTUALBOX_MAIN_VERSION
-          value: "6.1"
+        - name: VIRTUALBOX_MINOR_VERSION
+          value: "6.1.22"
       jobs:
         - name: 'Test Playbook'
           commands:
@@ -20,11 +20,9 @@ blocks:
             - unzip "vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
             - rm "vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
             - sudo mv vagrant /usr/local/bin/vagrant
-            - echo 'deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian focal contrib' | sudo tee /etc/apt/sources.list.d/virtualbox.list
-            - wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
-            - wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
-            - sudo apt-get update
-            - sudo apt-get -y install virtualbox-${VIRTUALBOX_MAIN_VERSION}
+            - wget https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/$(curl -sL https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/SHA256SUMS | awk -F'*' '{print $2}' | grep -i eoan)
+            - sudo dpkg -i virtualbox*deb
+            - rm virtualbox*deb
             - wget https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
             - echo "y" | sudo VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
             - rm Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
