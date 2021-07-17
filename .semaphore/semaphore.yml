@@ -3,7 +3,7 @@ name: Docker Build
 agent:
   machine:
     type: e1-standard-2
-    os_image: ubuntu1804
+    os_image: ubuntu2004
 blocks:
   - name: Test
     task:
@@ -22,7 +22,7 @@ blocks:
             - unzip "vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
             - rm "vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
             - sudo mv vagrant /usr/local/bin/vagrant
-            - echo 'deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian bionic contrib' | sudo tee /etc/apt/sources.list.d/virtualbox.list
+            - echo 'deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian focal contrib' | sudo tee /etc/apt/sources.list.d/virtualbox.list
             - wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
             - wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
             - sudo add-apt-repository -y  ppa:ubuntu-toolchain-r/test
