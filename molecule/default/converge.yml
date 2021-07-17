@@ -1,0 +1,14 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include ansible-role-zerotier"
+      include_role:
+        name: "ansible-role-zerotier"
+      vars:
+        zerotier_networks:
+          0cccb752f733a00e:
+            apikey: 34222
+            config:
+              authorized: True
+            hidden: False

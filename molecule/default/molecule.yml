@@ -1,0 +1,14 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: vbox
+platforms:
+  - name: test
+    box: generic/ubuntu2004
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
