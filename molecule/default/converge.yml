@@ -1,6 +1,7 @@
 ---
 - name: Converge
   hosts: all
+  sudo: yes
   tasks:
     - name: "Include ansible-role-zerotier"
       include_role:
