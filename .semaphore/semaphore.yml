@@ -26,7 +26,7 @@ blocks:
             - wget https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
             - echo "y" | sudo VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
             - rm Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
-            - pip3 install molecule[lint] molecule-vagrant ansible==2.9.0 python-vagrant
+            - pip3 install molecule[lint] molecule-vagrant ansible>=2.9,<2.10 python-vagrant jinja2>=2.11.2
             - export PATH=$PATH:/home/semaphore/.local/bin
             - molecule lint
             - molecule create
