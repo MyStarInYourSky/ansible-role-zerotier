@@ -8,7 +8,7 @@
         name: "ansible-role-zerotier"
       vars:
         zerotier_networks:
-          0cccb752f733a00e:
+          8056c2e21c000001:
             apikey: 34222
             config:
               authorized: True
