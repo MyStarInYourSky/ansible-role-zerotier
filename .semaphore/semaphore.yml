@@ -21,7 +21,7 @@ blocks:
             - rm "vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
             - sudo mv vagrant /usr/local/bin/vagrant
             - wget https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/$(curl -sL https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/SHA256SUMS | awk -F'*' '{print $2}' | grep -i eoan)
-            - sudo apt -y install ./virtualbox*deb
+            - sudo apt -y install ./virtualbox*deb libarchive-tools
             - rm virtualbox*deb
             - wget https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
             - echo "y" | sudo VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
