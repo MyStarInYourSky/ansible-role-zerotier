@@ -14,6 +14,8 @@ blocks:
           value: "6.1.22"
         - name: MOLECULE_DEBUG
           value: "0"
+        - name: ANSIBLE_VEBOSITY
+          value: "0"
       jobs:
         - name: 'Test Playbook'
           commands:
