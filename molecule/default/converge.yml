@@ -9,7 +9,6 @@
       vars:
         zerotier_networks:
           8056c2e21c000001:
-            apikey: 1234
             config:
               authorized: True
             hidden: False
