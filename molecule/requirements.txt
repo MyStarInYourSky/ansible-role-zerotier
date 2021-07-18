@@ -3,3 +3,4 @@ ansible>=2.9,<2.10
 molecule[lint] 
 molecule-vagrant
 python-vagrant
+j2cli
