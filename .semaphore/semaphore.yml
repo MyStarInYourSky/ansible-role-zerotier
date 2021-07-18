@@ -34,6 +34,6 @@ blocks:
             - rm Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
             - pip3 install -r molecule/requirements.txt
             - export PATH=$PATH:/home/semaphore/.local/bin
-            - j2 molecule/default/converge.yml.j2 molecule/default/converge.yml
+            - j2 molecule/default/converge.yml.j2 > molecule/default/converge.yml
             - molecule lint
             - molecule test
