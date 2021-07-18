@@ -40,3 +40,5 @@
   loop: "{{lookup('dict', zerotier_networks, wantlist=True)}}"
   loop_control:
     label: "{{ item.key }}"
+  no_log: True
+  register: zerotier_network_setup

@@ -265,7 +265,7 @@ def main():
             config=dict(type='dict', required=False, default={}),
             hidden=dict(type='bool', required=False, default=False),
             joined=dict(type='bool', required=False, default=True),
-            apikey=dict(type='str', required=False, default=""),
+            apikey=dict(type='str', required=False, no_log=True, default=""),
         ),
         supports_check_mode=True,
     )
