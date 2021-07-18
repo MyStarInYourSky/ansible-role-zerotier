@@ -9,7 +9,7 @@
       vars:
         zerotier_networks:
           8056c2e21c000001:
-            apikey: 34222
+            apikey: {{ZEROTIER_TEST_USER}}
             config:
               authorized: True
             hidden: False
