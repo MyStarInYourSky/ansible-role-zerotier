@@ -13,7 +13,7 @@ blocks:
         - name: VIRTUALBOX_MINOR_VERSION
           value: "6.1.22"
         - name: MOLECULE_DEBUG
-          value: 0
+          value: "0"
       jobs:
         - name: 'Test Playbook'
           commands:
