@@ -11,8 +11,5 @@ platforms:
     box: generic/ubuntu2004
 provisioner:
   name: ansible
-  config_options:
-    defaults:
-      display_args_to_stdout: False
 verifier:
   name: ansible
