@@ -29,7 +29,7 @@ blocks:
           - sudo mv vagrant /usr/local/bin/vagrant
           - sudo apt-get update
           - sudo apt-get -y install qemu libvirt-daemon-system libvirt-clients ebtables dnsmasq-base libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev libguestfs-tools
-          - vagrant plugin install vagrant-libvirt
+          - CONFIGURE_ARGS="with-libvirt-include=/usr/include/libvirt with-libvirt-lib=/usr/lib" vagrant plugin install vagrant-libvirt
           - pip3 install -r molecule/requirements.txt
           - export PATH=$PATH:/home/semaphore/.local/bin
           - j2 molecule/default/converge.yml.j2 > molecule/default/converge.yml
