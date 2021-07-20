@@ -7,7 +7,7 @@ driver:
   provider:
     name: libvirt
 platforms:
-  - name: test
+  - name: ubuntu2004
     box: generic/ubuntu2004
 provisioner:
   name: ansible
