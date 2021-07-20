@@ -5,7 +5,7 @@ dependency:
 driver:
   name: vagrant
   provider:
-    name: vbox
+    name: libvirt
 platforms:
   - name: test
     box: generic/ubuntu2004

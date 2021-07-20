@@ -27,12 +27,7 @@ blocks:
           - unzip "vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
           - rm "vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
           - sudo mv vagrant /usr/local/bin/vagrant
-          - wget https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/$(curl -sL https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/SHA256SUMS | awk -F'*' '{print $2}' | grep -i eoan)
-          - sudo apt -y install ./virtualbox*deb libarchive-tools
-          - rm virtualbox*deb
-          - wget https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
-          - echo "y" | sudo VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
-          - rm Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
+          - sudo apt-get install qemu-kvm libvirt-daemon-system
           - pip3 install -r molecule/requirements.txt
           - export PATH=$PATH:/home/semaphore/.local/bin
           - j2 molecule/default/converge.yml.j2 > molecule/default/converge.yml
