@@ -27,7 +27,7 @@ blocks:
           - unzip "vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
           - rm "vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
           - sudo mv vagrant /usr/local/bin/vagrant
-          - sudo apt-get install qemu libvirt-daemon-system libvirt-clients ebtables dnsmasq-base libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev libguestfs-tools
+          - sudo apt-get -y install qemu libvirt-daemon-system libvirt-clients ebtables dnsmasq-base libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev libguestfs-tools
           - vagrant plugin install vagrant-libvirt
           - pip3 install -r molecule/requirements.txt
           - export PATH=$PATH:/home/semaphore/.local/bin
