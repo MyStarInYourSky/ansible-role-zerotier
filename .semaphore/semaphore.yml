@@ -18,22 +18,29 @@ blocks:
           value: "0"
       secrets:
         - name: ZEROTIER_QA_ACCOUNT
+      prologue:
+        commands:
+          - checkout
+          - export ZEROTIER_QA_NETWORK_KEY=$(curl -s -H "Authorization:bearer $ZEROTIER_QA_API_KEY" -H 'Content-Type:application/json' -d "{}" -X POST https://my.zerotier.com/api/network | jq ".id")
+          - curl -s -H "Authorization:bearer $ZEROTIER_QA_API_KEY" -H 'Content-Type:application/json' -d "{"config":{"private":true,"ipAssignmentPools":[{"ipRangeStart":"192.168.55.1","ipRangeEnd":"192.168.55.254"}],"routes":[{"target":"192.168.55.0/24","via":null}],"v4AssignMode":{"zt":true}}}" -X POST https://my.zerotier.com/api/network/$ZEROTIER_QA_NETWORK_KEY
+          - wget "https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
+          - unzip "vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
+          - rm "vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
+          - sudo mv vagrant /usr/local/bin/vagrant
+          - wget https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/$(curl -sL https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/SHA256SUMS | awk -F'*' '{print $2}' | grep -i eoan)
+          - sudo apt -y install ./virtualbox*deb libarchive-tools
+          - rm virtualbox*deb
+          - wget https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
+          - echo "y" | sudo VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
+          - rm Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
+          - pip3 install -r molecule/requirements.txt
+          - export PATH=$PATH:/home/semaphore/.local/bin
+          - j2 molecule/default/converge.yml.j2 > molecule/default/converge.yml
+      epilogue:
+        commands:
+          - curl -s -H "Authorization:bearer $ZEROTIER_QA_API_KEY" -H 'Content-Type:application/json' -d "{}" -X DELETE https://my.zerotier.com/api/network/$ZEROTIER_QA_NETWORK_KEY
       jobs:
         - name: 'Test Playbook'
           commands:
-            - checkout
-            - wget "https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
-            - unzip "vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
-            - rm "vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
-            - sudo mv vagrant /usr/local/bin/vagrant
-            - wget https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/$(curl -sL https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/SHA256SUMS | awk -F'*' '{print $2}' | grep -i eoan)
-            - sudo apt -y install ./virtualbox*deb libarchive-tools
-            - rm virtualbox*deb
-            - wget https://download.virtualbox.org/virtualbox/${VIRTUALBOX_MINOR_VERSION}/Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
-            - echo "y" | sudo VBoxManage extpack install --replace Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
-            - rm Oracle_VM_VirtualBox_Extension_Pack-${VIRTUALBOX_MINOR_VERSION}.vbox-extpack
-            - pip3 install -r molecule/requirements.txt
-            - export PATH=$PATH:/home/semaphore/.local/bin
-            - j2 molecule/default/converge.yml.j2 > molecule/default/converge.yml
             - molecule lint
             - molecule test
