@@ -21,7 +21,7 @@ blocks:
       prologue:
         commands:
           - checkout
-          - export ZEROTIER_QA_NETWORK_KEY=$(curl -s -H "Authorization:bearer $ZEROTIER_QA_API_KEY" -H 'Content-Type:application/json' -d "{}" -X POST https://my.zerotier.com/api/network | jq ".id")
+          - export ZEROTIER_QA_NETWORK_KEY=$(curl -s -H "Authorization:bearer $ZEROTIER_QA_API_KEY" -H 'Content-Type:application/json' -d "{}" -X POST https://my.zerotier.com/api/network | jq -r ".id")
           - curl -s -H "Authorization:bearer $ZEROTIER_QA_API_KEY" -H 'Content-Type:application/json' -d "{"config":{"private":true,"ipAssignmentPools":[{"ipRangeStart":"192.168.55.1","ipRangeEnd":"192.168.55.254"}],"routes":[{"target":"192.168.55.0/24","via":null}],"v4AssignMode":{"zt":true}}}" -X POST "https://my.zerotier.com/api/network/$ZEROTIER_QA_NETWORK_KEY"
           - wget "https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
           - unzip "vagrant_${VAGRANT_VERSION}_linux_amd64.zip"
