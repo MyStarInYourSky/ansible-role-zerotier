@@ -18,6 +18,7 @@ blocks:
           value: "0"
       secrets:
         - name: ZEROTIER_QA_API_KEY
+        - name: DOCKER_HUB_ILOVEYATOO
       prologue:
         commands:
           - checkout
