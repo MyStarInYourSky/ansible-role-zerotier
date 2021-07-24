@@ -25,7 +25,7 @@ blocks:
           - export ZEROTIER_QA_NETWORK_KEY=$(curl -s -H "Authorization:bearer $ZEROTIER_QA_API_KEY" -H 'Content-Type:application/json' -d "{}" -X POST https://my.zerotier.com/api/network | jq -r ".id")
           - curl -s -H "Authorization:bearer $ZEROTIER_QA_API_KEY" -H 'Content-Type:application/json' -d '{"config":{"private":true,"ipAssignmentPools":[{"ipRangeStart":"192.168.55.1","ipRangeEnd":"192.168.55.254"}],"routes":[{"target":"192.168.55.0/24","via":null}],"v4AssignMode":{"zt":true}}}' -X POST "https://my.zerotier.com/api/network/$ZEROTIER_QA_NETWORK_KEY"
           - echo "$DOCKER_HUB_PASS_ILOVEYATOO" | docker login --username "$DOCKER_HUB_USER_ILOVEYATOO" --password-stdin
-          - docker run -it --rm -v /home/semaphore:/docker -v /var/run/libvirt/libvirt-sock:/var/run/libvirt/libvirt-sock -e ZEROTIER_QA_NETWORK_KEY=$ZEROTIER_QA_NETWORK_KEY -e ZEROTIER_QA_API_KEY=$ZEROTIER_QA_API_KEY iloveyatoo/semaphoreci-builder-vagrantlibvirt:latest /bin/bash -c "j2 /docker/molecule/default/converge.yml.j2 > /docker/molecule/default/converge.yml"
+          - docker run -it --rm -v /home/semaphore:/docker -v /var/run/libvirt/libvirt-sock:/var/run/libvirt/libvirt-sock -e ZEROTIER_QA_NETWORK_KEY=$ZEROTIER_QA_NETWORK_KEY -e ZEROTIER_QA_API_KEY=$ZEROTIER_QA_API_KEY iloveyatoo/semaphoreci-builder-vagrantlibvirt:latest /bin/bash -c "j2 /docker/ansible-role-zerotier/molecule/default/converge.yml.j2 > /docker/ansible-role-zerotier/molecule/default/converge.yml"
       epilogue:
         commands:
           - curl -s -H "Authorization:bearer $ZEROTIER_QA_API_KEY" -H 'Content-Type:application/json' -d "{}" -X DELETE "https://my.zerotier.com/api/network/$ZEROTIER_QA_NETWORK_KEY"
