@@ -3,17 +3,13 @@
   include_vars:
     file: osmap.yaml
     name: osmap
-- name: Install Ubuntu Packages
-  include_tasks: install_ubuntu.yml
-  when: ansible_distribution == "Ubuntu"
+- name: Install ZeroTier (DEB)
+  include_tasks: install_deb.yml
+  when: ansible_facts['os_family'] == 'Debian'
 
-- name: Install Debian Packages
-  include_tasks: install_debian.yml
-  when: ansible_distribution == "Debian"
-
-- name: Install CentOS/RHEL Packages
-  include_tasks: install_centos.yml
-  when: ansible_distribution == "RedHat"
+- name: Install ZeroTier (RPM)
+  include_tasks: install_rpm.yml
+  when: ansible_facts['os_family'] == "RedHat"
 
 - name: Enable ZeroTier Service
   systemd:

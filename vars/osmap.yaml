@@ -1,11 +1,18 @@
-ubuntu:
+Ubuntu:
   focal:
-    zerotier_deb_url: deb https://download.zerotier.com/debian/bionic bionic main
+    zerotier_repo: deb https://download.zerotier.com/debian/bionic bionic main
     packages:
       - gpg
       - gnupg2
   bionic:
-    zerotier_deb_url: deb https://download.zerotier.com/debian/bionic bionic main
+    zerotier_repo: deb https://download.zerotier.com/debian/bionic bionic main
     packages:
       - gpg
       - gnupg2
+Centos:
+  8:
+    zerotier_repo: http://download.zerotier.com/redhat/el/8
+    packages: []
+  7:
+    zerotier_repo: http://download.zerotier.com/redhat/el/7
+    packages: []

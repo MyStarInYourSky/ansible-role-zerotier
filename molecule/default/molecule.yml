@@ -5,6 +5,15 @@ dependency:
 driver:
   name: docker
 platforms:
+  - name: centos7
+    image: centos:7
+    command: /usr/sbin/init
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: True
   - name: ubuntu2004
     image: geerlingguy/docker-ubuntu2004-ansible:latest
     command: /lib/systemd/systemd
