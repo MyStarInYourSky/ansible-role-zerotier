@@ -13,6 +13,6 @@
     gpgcheck: yes
 
 - name: Install ZeroTier
-  apt:
+  yum:
     name: zerotier-one-{{zerotier_version}}
     state: present
