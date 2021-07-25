@@ -10,8 +10,12 @@ driver:
 platforms:
   - name: ubuntu2004
     box: generic/ubuntu2004
+    memory: 1024
+    cpus: 2
   - name: ubuntu1804
     box: generic/ubuntu1804
+    memory: 1024
+    cpus: 2
 provisioner:
   name: ansible
 verifier:
