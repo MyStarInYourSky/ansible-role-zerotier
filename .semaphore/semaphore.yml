@@ -33,4 +33,4 @@ blocks:
         - name: 'Test Playbook'
           commands:
             - docker run -it --rm -v /home/semaphore:/docker -v /var/run/libvirt/libvirt-sock:/var/run/libvirt/libvirt-sock iloveyatoo/semaphoreci-builder-vagrantlibvirt:latest /bin/bash -c "cd ansible-role-zerotier && molecule lint"
-            - docker run -it --rm -v /home/semaphore:/docker -v /var/run/libvirt/libvirt-sock:/var/run/libvirt/libvirt-sock iloveyatoo/semaphoreci-builder-vagrantlibvirt:latest /bin/bash -c "cd ansible-role-zerotier && molecule test"
+            - docker run -it --privileged --rm -v /home/semaphore:/docker -v /var/run/libvirt/libvirt-sock:/var/run/libvirt/libvirt-sock iloveyatoo/semaphoreci-builder-vagrantlibvirt:latest /bin/bash -c "cd ansible-role-zerotier && molecule test"
