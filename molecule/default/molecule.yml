@@ -5,8 +5,8 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: centos7
-    image: centos:7
+  - name: centos8
+    image: centos:8
     command: /usr/sbin/init
     tmpfs:
       - /run
