@@ -18,19 +18,24 @@ blocks:
           value: "0"
       secrets:
         - name: ZEROTIER_QA_API_KEY
-        - name: DOCKER_HUB_ILOVEYATOO
       prologue:
         commands:
           - checkout
           - export ZEROTIER_QA_NETWORK_KEY=$(curl -s -H "Authorization:bearer $ZEROTIER_QA_API_KEY" -H 'Content-Type:application/json' -d "{}" -X POST https://my.zerotier.com/api/network | jq -r ".id")
           - curl -s -H "Authorization:bearer $ZEROTIER_QA_API_KEY" -H 'Content-Type:application/json' -d '{"config":{"private":true,"ipAssignmentPools":[{"ipRangeStart":"192.168.55.1","ipRangeEnd":"192.168.55.254"}],"routes":[{"target":"192.168.55.0/24","via":null}],"v4AssignMode":{"zt":true}}}' -X POST "https://my.zerotier.com/api/network/$ZEROTIER_QA_NETWORK_KEY"
-          - echo "$DOCKER_HUB_PASS_ILOVEYATOO" | docker login --username "$DOCKER_HUB_USER_ILOVEYATOO" --password-stdin
-          - docker run -it --rm -v /home/semaphore:/docker -v /var/run/libvirt/libvirt-sock:/var/run/libvirt/libvirt-sock -e ZEROTIER_QA_NETWORK_KEY=$ZEROTIER_QA_NETWORK_KEY -e ZEROTIER_QA_API_KEY=$ZEROTIER_QA_API_KEY iloveyatoo/semaphoreci-builder-vagrantlibvirt:latest /bin/bash -c "j2 /docker/ansible-role-zerotier/molecule/default/converge.yml.j2 > /docker/ansible-role-zerotier/molecule/default/converge.yml"
+          - curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+          - sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+          - sudo apt-get update
+          - sudo apt-get -y install qemu libvirt-daemon-system libvirt-clients ebtables dnsmasq-base libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev libguestfs-tools vagrant
+          - CONFIGURE_ARGS="with-libvirt-include=/usr/include/libvirt with-libvirt-lib=/usr/lib" CFLAGS="-I/opt/vagrant/embedded/include/ruby-3.0.0/ruby" vagrant plugin install vagrant-libvirt
+          - pip3 install -r molecule/requirements.txt
+          - export PATH=$PATH:/home/semaphore/.local/bin
+          - j2 molecule/default/converge.yml.j2 > molecule/default/converge.yml
       epilogue:
         commands:
           - curl -s -H "Authorization:bearer $ZEROTIER_QA_API_KEY" -H 'Content-Type:application/json' -d "{}" -X DELETE "https://my.zerotier.com/api/network/$ZEROTIER_QA_NETWORK_KEY"
       jobs:
         - name: 'Test Playbook'
           commands:
-            - docker run -it --rm -v /home/semaphore:/docker -v /var/run/libvirt/libvirt-sock:/var/run/libvirt/libvirt-sock iloveyatoo/semaphoreci-builder-vagrantlibvirt:latest /bin/bash -c "cd ansible-role-zerotier && molecule lint"
-            - docker run -it --privileged --rm -v /home/semaphore:/docker -v /var/run/libvirt/libvirt-sock:/var/run/libvirt/libvirt-sock iloveyatoo/semaphoreci-builder-vagrantlibvirt:latest /bin/bash -c "cd ansible-role-zerotier && molecule test"
+            - molecule lint
+            - molecule test

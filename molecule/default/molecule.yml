@@ -3,19 +3,16 @@ scenario: {}
 dependency:
   name: galaxy
 driver:
-  name: vagrant
-  provider:
-    provider: kvm
-    name: libvirt
+  name: docker
 platforms:
-  - name: ubuntu2004
-    box: generic/ubuntu2004
-    memory: 1024
-    cpus: 2
-  - name: ubuntu1804
-    box: generic/ubuntu1804
-    memory: 1024
-    cpus: 2
+  - name: instance
+    image: ubuntu:20.04
+    command: /sbin/init
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
 provisioner:
   name: ansible
 verifier:
