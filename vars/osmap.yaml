@@ -10,9 +10,9 @@ Ubuntu:
       - gpg
       - gnupg2
 CentOS:
-  8:
+  "8":
     zerotier_repo: http://download.zerotier.com/redhat/el/8
     packages: []
-  7:
+  "7":
     zerotier_repo: http://download.zerotier.com/redhat/el/7
     packages: []
