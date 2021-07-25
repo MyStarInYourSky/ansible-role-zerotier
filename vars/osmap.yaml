@@ -3,7 +3,9 @@ ubuntu:
     zerotier_deb_url: deb https://download.zerotier.com/debian/bionic bionic main
     packages:
       - gpg
+      - gnupg2
   bionic:
     zerotier_deb_url: deb https://download.zerotier.com/debian/bionic bionic main
     packages:
       - gpg
+      - gnupg2
