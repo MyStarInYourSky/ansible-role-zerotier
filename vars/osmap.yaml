@@ -9,7 +9,7 @@ Ubuntu:
     packages:
       - gpg
       - gnupg2
-Centos:
+CentOS:
   8:
     zerotier_repo: http://download.zerotier.com/redhat/el/8
     packages: []
