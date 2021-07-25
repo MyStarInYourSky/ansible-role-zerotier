@@ -4,6 +4,11 @@
     state: present
     pkg: "{{osmap[ansible_facts['distribution']][ansible_distribution_major_version]['packages']}}"
 
+- name: Add ZeroTier GPG Key
+  rpm_key:
+    key: "{{zerotier_repo['gpg']}}"
+    state: present
+
 - name: Add ZeroTier Repo
   yum_repository:
     name: zerotier
