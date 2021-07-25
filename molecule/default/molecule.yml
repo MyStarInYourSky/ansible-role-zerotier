@@ -5,6 +5,7 @@ dependency:
 driver:
   name: vagrant
   provider:
+    provider: kvm
     name: libvirt
 platforms:
   - name: ubuntu2004
