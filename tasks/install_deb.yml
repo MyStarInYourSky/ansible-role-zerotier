@@ -5,12 +5,12 @@
     state: present
     pkg: "{{osmap[ansible_facts['distribution']][ansible_distribution_release]['packages']}}"
 
-- name: Add ZeroTier GPG Key (Ubuntu/Debian)
+- name: Add ZeroTier GPG Key
   apt_key:
     url: "{{zerotier_repo['gpg']}}"
     state: present
 
-- name: Add ZeroTier Repo (Ubuntu/Debian)
+- name: Add ZeroTier Repo
   apt_repository:
     repo: "{{osmap[ansible_facts['distribution']][ansible_distribution_release]['zerotier_repo']}}"
 
