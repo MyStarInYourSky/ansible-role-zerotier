@@ -9,6 +9,12 @@ Ubuntu:
     packages:
       - gpg
       - gnupg2
+Debian:
+  bullseye:
+    zerotier_repo: deb https://download.zerotier.com/debian/bullseye bullseye main
+    packages:
+      - gpg
+      - gnupg2
 CentOS:
   "8":
     zerotier_repo: http://download.zerotier.com/redhat/el/8
