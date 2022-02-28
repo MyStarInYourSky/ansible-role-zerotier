@@ -1,0 +1,17 @@
+- name: Start ZeroTier Service
+  systemd:
+    name: zerotier-one
+    state: started
+    enabled: yes
+
+- name: Restart ZeroTier Service
+  systemd:
+    name: zerotier-one
+    state: restarted
+    enabled: yes
+
+- name: Stop ZeroTier Service
+  systemd:
+    name: zerotier-one
+    state: stopped
+    enabled: yes
