@@ -6,7 +6,7 @@
 
 - name: Add ZeroTier GPG Key
   rpm_key:
-    key: "{{zerotier_repo['gpg']}}"
+    key: "{{osmap[ansible_facts['distribution']][ansible_distribution_major_version]['gpg_key']}}"
     state: present
 
 - name: Add ZeroTier Repo
