@@ -1,24 +1,29 @@
 Ubuntu:
   focal:
     zerotier_repo: deb https://download.zerotier.com/debian/bionic bionic main
+    gpg_key: https://raw.githubusercontent.com/zerotier/ZeroTierOne/master/doc/contact%40zerotier.com.gpg
     packages:
       - gpg
       - gnupg2
   bionic:
     zerotier_repo: deb https://download.zerotier.com/debian/bionic bionic main
+    gpg_key: https://raw.githubusercontent.com/zerotier/ZeroTierOne/master/doc/contact%40zerotier.com.gpg
     packages:
       - gpg
       - gnupg2
 Debian:
   bullseye:
     zerotier_repo: deb https://download.zerotier.com/debian/bullseye bullseye main
+    gpg_key: https://raw.githubusercontent.com/zerotier/ZeroTierOne/master/doc/contact%40zerotier.com.gpg
     packages:
       - gpg
       - gnupg2
 CentOS:
   "8":
     zerotier_repo: http://download.zerotier.com/redhat/el/8
+    gpg_key: https://raw.githubusercontent.com/zerotier/ZeroTierOne/master/doc/contact%40zerotier.com.gpg
     packages: []
   "7":
     zerotier_repo: http://download.zerotier.com/redhat/el/7
+    gpg_key: https://raw.githubusercontent.com/zerotier/ZeroTierOne/master/doc/contact%40zerotier.com.gpg
     packages: []

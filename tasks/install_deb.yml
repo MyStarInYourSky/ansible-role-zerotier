@@ -3,19 +3,20 @@
   apt:
     update_cache: yes
     state: present
-    pkg: "{{osmap[ansible_facts['distribution']][ansible_distribution_release]['packages']}}"
+    pkg: "{{ osmap[ansible_facts['distribution']][ansible_distribution_release]['packages'] }}"
 
 - name: Add ZeroTier GPG Key
   apt_key:
-    url: "{{zerotier_repo['gpg']}}"
+    url: "{{ osmap[ansible_facts['distribution']][ansible_distribution_release]['gpg_key'] }}"
     state: present
 
 - name: Add ZeroTier Repo
   apt_repository:
-    repo: "{{osmap[ansible_facts['distribution']][ansible_distribution_release]['zerotier_repo']}}"
+    repo: "{{ osmap[ansible_facts['distribution']][ansible_distribution_release]['zerotier_repo'] }}"
 
 - name: Install ZeroTier
   apt:
-    name: zerotier-one={{zerotier_version}}
+    name: zerotier-one={{ zerotier_version }}
     state: present
     update_cache: yes
+  notify: Start ZeroTier Service
