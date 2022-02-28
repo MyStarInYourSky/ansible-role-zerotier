@@ -7,7 +7,7 @@
 
 - name: Add ZeroTier GPG Key
   apt_key:
-    url: "{{osmap[ansible_facts['distribution']][ansible_distribution_major_version]['gpg_key']}}"
+    url: "{{osmap[ansible_facts['distribution']][ansible_distribution_release]['gpg_key']}}"
     state: present
 
 - name: Add ZeroTier Repo
