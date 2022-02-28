@@ -18,7 +18,7 @@ Example
 zerotier_version: 1.4.6
 ```
 
-## `zerotier_networks`
+### `zerotier_networks`
 Configures the ZeroTier One networks on the host.
 You can check the allowed config options in the [ZeroTier API Docs](https://docs.zerotier.com/central/v1#operation/updateNetworkMember)
 
@@ -42,7 +42,7 @@ zerotier_networks:
         - [1001, 1001]
 ```
 
-## `zerotier_localconfig`
+### `zerotier_localconfig`
 Configures the local ZeroTier One config at /var/lib/zerotier-one/local.conf.
 See more info at the [ZeroTier Local Configuration Options](https://docs.zerotier.com/zerotier/zerotier.conf/#42localconfigurationoptionsaname4_2a)
 
