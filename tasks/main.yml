@@ -5,12 +5,10 @@
     name: osmap
 - name: Install ZeroTier (DEB)
   include_tasks: install_deb.yml
-  notify: Start ZeroTier Service
   when: ansible_facts['os_family'] == 'Debian'
 
 - name: Install ZeroTier (RPM)
   include_tasks: install_rpm.yml
-  notify: Start ZeroTier Service
   when: ansible_facts['os_family'] == "RedHat"
 
 - name: Wait for ZeroTier to generate identity

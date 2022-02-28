@@ -21,3 +21,4 @@
   yum:
     name: zerotier-one-{{zerotier_version}}
     state: present
+  notify: Start ZeroTier Service
