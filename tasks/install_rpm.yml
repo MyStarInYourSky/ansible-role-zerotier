@@ -2,23 +2,23 @@
 - name: Install Prerequisite Packages
   yum:
     state: present
-    pkg: "{{osmap[ansible_facts['distribution']][ansible_distribution_major_version]['packages']}}"
+    pkg: "{{ osmap[ansible_facts['distribution']][ansible_distribution_major_version]['packages'] }}"
 
 - name: Add ZeroTier GPG Key
   rpm_key:
-    key: "{{osmap[ansible_facts['distribution']][ansible_distribution_major_version]['gpg_key']}}"
+    key: "{{ osmap[ansible_facts['distribution']][ansible_distribution_major_version]['gpg_key'] }}"
     state: present
 
 - name: Add ZeroTier Repo
   yum_repository:
     name: zerotier
     description: ZeroTier YUM repo
-    baseurl: "{{osmap[ansible_facts['distribution']][ansible_distribution_major_version]['zerotier_repo']}}"
+    baseurl: "{{ osmap[ansible_facts['distribution']][ansible_distribution_major_version]['zerotier_repo'] }}"
     enabled: yes
     gpgcheck: yes
 
 - name: Install ZeroTier
   yum:
-    name: zerotier-one-{{zerotier_version}}
+    name: zerotier-one-{{ zerotier_version }}
     state: present
   notify: Start ZeroTier Service
