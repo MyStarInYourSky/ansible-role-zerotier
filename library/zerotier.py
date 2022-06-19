@@ -30,6 +30,11 @@ options:
             - Sets the ZeroTier node config
         type: dict
         required: false
+    network_config:
+        description:
+            - Sets the local ZeroTier network config, see https://github.com/zerotier/ZeroTierOne/blob/master/service/README.md#networknetwork-id
+        type: dict
+        required: false
     hidden:
         description:
             - Whether the remote host should be hidden in the ZeroTier network
@@ -112,7 +117,7 @@ class ZeroTierNode(object):
         self.hidden = module.params['hidden']
         self.nodename = module.params['nodename']
         self.nodedescription = module.params['nodedescription']
-        self.apikey = module.params['apikey']
+        self.ztcontroller_apikey = module.params['apikey']
         self.joined = module.params['joined']
         self.config = module.params['config']
         self.node = self.getNodeID()
@@ -160,12 +165,12 @@ class ZeroTierNode(object):
         self.result['changed'] = True
         return result
 
-    def setNodeConfig(self, config):
+    def setZTControllerNodeConfig(self, config):
         """
         Sets node configuration
         """
         api_url = f"{self.api_url}/api/network/{self.network}/member/{self.node}"
-        api_auth = {'Authorization': 'bearer ' + self.apikey, 'Content-Type': 'application/json'}
+        api_auth = {'Authorization': 'bearer ' + self.ztcontroller_apikey, 'Content-Type': 'application/json'}
         config_json = json.dumps(config)
         try:
             raw_resp = open_url(api_url, headers=api_auth, method="POST", data=config_json)
@@ -178,12 +183,12 @@ class ZeroTierNode(object):
         except Exception as e:
             self.module.fail_json(changed=False, msg="Unable to set config of ZeroTier node " + self.node, reason=str(e))
 
-    def getNodeConfig(self):
+    def getZTControllerNodeConfig(self):
         """
         Gets node configuration
         """
-        api_url = self.api_url + '/api/network/' + self.network + '/member/' + self.node
-        api_auth = {'Authorization': 'bearer ' + self.apikey, 'Content-Type': 'application/json'}
+        api_url = f"{self.api_url}/api/network/{self.network}/member/{self.node}"
+        api_auth = {'Authorization': 'bearer ' + self.ztcontroller_apikey, 'Content-Type': 'application/json'}
         try:
             raw_resp = open_url(api_url, headers=api_auth, method="GET")
             if raw_resp.getcode() == 403:
@@ -196,8 +201,8 @@ class ZeroTierNode(object):
         except Exception as e:
             self.module.fail_json(changed=False, msg="Unable to get config of ZeroTier node " + self.node, reason=str(e))
 
-    def buildNodeConfig(self):
-        current_full_node_config = self.getNodeConfig()
+    def buildZTControllerNodeConfig(self):
+        current_full_node_config = self.getZTControllerNodeConfig()
 
         # Seperate the config key for clarity
         node_config = current_full_node_config['config']
@@ -220,14 +225,14 @@ class ZeroTierNode(object):
             current_full_node_config['description'] = self.nodedescription
 
         # Send it away
-        self.setNodeConfig(current_full_node_config)
+        self.setZTControllerNodeConfig(current_full_node_config)
 
-    def checkAPIKey(self):
+    def checkZTControllerAPIKey(self):
             """
             Check if ZeroTier API Key works
             """
             api_url = self.api_url + '/api/network/' + self.network
-            api_auth = {'Authorization': 'bearer ' + self.apikey, 'Content-Type': 'application/json'}
+            api_auth = {'Authorization': 'bearer ' + self.ztcontroller_apikey, 'Content-Type': 'application/json'}
             try:
                 raw_resp = open_url(api_url, headers=api_auth, validate_certs=True)
                 if raw_resp.getcode() == 403:
@@ -249,6 +254,7 @@ class ZeroTierNode(object):
         else:
             self.module.fail_json(changed=False,
                                   msg="ZeroTier installation cannot be located in $PATH. Check your installation.")
+
 
 def main():
     ssh_defaults = dict(
@@ -276,10 +282,10 @@ def main():
 
     if zerotier.joined:
         # Check if API Key is valid for the specified network
-        zerotier.checkAPIKey()
+        zerotier.checkZTControllerAPIKey()
 
         # Apply Config
-        zerotier.buildNodeConfig()
+        zerotier.buildZTControllerNodeConfig()
 
         if zerotier.result['changed']:
             module.exit_json(changed=True, msg="Zerotier config updated")
