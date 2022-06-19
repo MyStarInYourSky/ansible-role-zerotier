@@ -165,15 +165,18 @@ class ZeroTierNode(object):
         self.result['changed'] = True
         return result
 
-    def setZTControllerNodeConfig(self, config):
+    def ZTControllerNodeConfig(self, action, config='{}'):
         """
-        Sets node configuration
+        Manages Node Config
         """
         api_url = f"{self.api_url}/api/network/{self.network}/member/{self.node}"
         api_auth = {'Authorization': 'bearer ' + self.ztcontroller_apikey, 'Content-Type': 'application/json'}
         config_json = json.dumps(config)
         try:
-            raw_resp = open_url(api_url, headers=api_auth, method="POST", data=config_json)
+            if action == "POST":
+                raw_resp = open_url(api_url, headers=api_auth, method="POST", data=config_json)
+            elif action == "GET":
+                raw_resp = open_url(api_url, headers=api_auth, method="GET")
             if raw_resp.getcode() == 403:
                 self.module.fail_json(changed=False, msg="Unable to authenticate with ZeroTier API!")
             elif raw_resp.getcode() == 404:
@@ -183,26 +186,8 @@ class ZeroTierNode(object):
         except Exception as e:
             self.module.fail_json(changed=False, msg="Unable to set config of ZeroTier node " + self.node, reason=str(e))
 
-    def getZTControllerNodeConfig(self):
-        """
-        Gets node configuration
-        """
-        api_url = f"{self.api_url}/api/network/{self.network}/member/{self.node}"
-        api_auth = {'Authorization': 'bearer ' + self.ztcontroller_apikey, 'Content-Type': 'application/json'}
-        try:
-            raw_resp = open_url(api_url, headers=api_auth, method="GET")
-            if raw_resp.getcode() == 403:
-                self.module.fail_json(changed=False, msg="Unable to authenticate with ZeroTier API!")
-            elif raw_resp.getcode() == 404:
-                self.module.fail_json(changed=False, msg="ZeroTier network does not exist")
-            elif raw_resp.getcode() == 200:
-                resp = json.loads(raw_resp.read())
-                return resp
-        except Exception as e:
-            self.module.fail_json(changed=False, msg="Unable to get config of ZeroTier node " + self.node, reason=str(e))
-
     def buildZTControllerNodeConfig(self):
-        current_full_node_config = self.getZTControllerNodeConfig()
+        current_full_node_config = self.ZTControllerNodeConfig(action="GET")
 
         # Seperate the config key for clarity
         node_config = current_full_node_config['config']
@@ -225,7 +210,7 @@ class ZeroTierNode(object):
             current_full_node_config['description'] = self.nodedescription
 
         # Send it away
-        self.setZTControllerNodeConfig(current_full_node_config)
+        self.ZTControllerNodeConfig(action="POST", config=current_full_node_config)
 
     def checkZTControllerAPIKey(self):
             """
