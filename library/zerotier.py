@@ -30,11 +30,6 @@ options:
             - Sets the ZeroTier node config
         type: dict
         required: false
-    network_config:
-        description:
-            - Sets the local ZeroTier network config, see https://github.com/zerotier/ZeroTierOne/blob/master/service/README.md#networknetwork-id
-        type: dict
-        required: false
     hidden:
         description:
             - Whether the remote host should be hidden in the ZeroTier network
