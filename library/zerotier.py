@@ -176,9 +176,7 @@ class ZeroTierNode(object):
                 self.module.fail_json(changed=False, msg="Unable to authenticate with ZeroTier API!")
             elif raw_resp.getcode() == 404:
                 self.module.fail_json(changed=False, msg="ZeroTier network or node does not exist")
-            elif raw_resp.getcode() == 200 and action == "POST":
-                return True
-            elif raw_resp.getcode() == 200 and action == "GET":
+            elif raw_resp.getcode() == 200:
                 resp = json.loads(raw_resp.read())
                 return resp
         except Exception as e:
@@ -208,7 +206,8 @@ class ZeroTierNode(object):
             current_full_node_config['description'] = self.nodedescription
 
         # Send it away
-        self.ZTControllerNodeConfig(action="POST", config=current_full_node_config)
+        result = self.ZTControllerNodeConfig(action="POST", config=current_full_node_config)
+        return(result)        
 
     def checkZTControllerAPIKey(self):
             """
