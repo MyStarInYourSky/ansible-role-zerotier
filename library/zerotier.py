@@ -176,8 +176,11 @@ class ZeroTierNode(object):
                 self.module.fail_json(changed=False, msg="Unable to authenticate with ZeroTier API!")
             elif raw_resp.getcode() == 404:
                 self.module.fail_json(changed=False, msg="ZeroTier network or node does not exist")
-            elif raw_resp.getcode() == 200:
+            elif raw_resp.getcode() == 200 and action == "POST":
                 return True
+            elif raw_resp.getcode() == 200 and action == "GET":
+                resp = json.loads(raw_resp.read())
+                return resp
         except Exception as e:
             self.module.fail_json(changed=False, msg="Unable to set config of ZeroTier node " + self.node, reason=str(e))
 
