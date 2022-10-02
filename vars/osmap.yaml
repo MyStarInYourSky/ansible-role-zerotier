@@ -1,6 +1,6 @@
 Ubuntu:
   focal:
-    zerotier_repo: deb https://download.zerotier.com/debian/bionic bionic main
+    zerotier_repo: deb https://download.zerotier.com/debian/focal focal main
     packages:
       - gpg
       - gnupg2
@@ -9,9 +9,24 @@ Ubuntu:
     packages:
       - gpg
       - gnupg2
+  jammy:
+    zerotier_repo: deb https://download.zerotier.com/debian/jammy jammy main
+    packages:
+      - gpg
+      - gnupg2
 Debian:
   bullseye:
     zerotier_repo: deb https://download.zerotier.com/debian/bullseye bullseye main
+    packages:
+      - gpg
+      - gnupg2
+  buster:
+    zerotier_repo: deb https://download.zerotier.com/debian/buster buster main
+    packages:
+      - gpg
+      - gnupg2
+  stretch:
+    zerotier_repo: deb https://download.zerotier.com/debian/stretch stretch main
     packages:
       - gpg
       - gnupg2
