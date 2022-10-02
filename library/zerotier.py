@@ -106,7 +106,7 @@ class ZeroTierNode(object):
     """
 
     def __init__(self, module):
-        self.api_url = "https://my.zerotier.com"
+        self.api_url = "https://api.zerotier.com"
         self.module = module
         self.network = module.params['name']
         self.hidden = module.params['hidden']
@@ -165,7 +165,7 @@ class ZeroTierNode(object):
         Sets node configuration
         """
         api_url = f"{self.api_url}/api/network/{self.network}/member/{self.node}"
-        api_auth = {'Authorization': 'bearer ' + self.apikey, 'Content-Type': 'application/json'}
+        api_auth = {'Authorization': 'token ' + self.apikey, 'Content-Type': 'application/json'}
         config_json = json.dumps(config)
         try:
             raw_resp = open_url(api_url, headers=api_auth, method="POST", data=config_json)
@@ -183,7 +183,7 @@ class ZeroTierNode(object):
         Gets node configuration
         """
         api_url = self.api_url + '/api/network/' + self.network + '/member/' + self.node
-        api_auth = {'Authorization': 'bearer ' + self.apikey, 'Content-Type': 'application/json'}
+        api_auth = {'Authorization': 'token ' + self.apikey, 'Content-Type': 'application/json'}
         try:
             raw_resp = open_url(api_url, headers=api_auth, method="GET")
             if raw_resp.getcode() == 403:
@@ -227,7 +227,7 @@ class ZeroTierNode(object):
             Check if ZeroTier API Key works
             """
             api_url = self.api_url + '/api/network/' + self.network
-            api_auth = {'Authorization': 'bearer ' + self.apikey, 'Content-Type': 'application/json'}
+            api_auth = {'Authorization': 'token ' + self.apikey, 'Content-Type': 'application/json'}
             try:
                 raw_resp = open_url(api_url, headers=api_auth, validate_certs=True)
                 if raw_resp.getcode() == 403:
