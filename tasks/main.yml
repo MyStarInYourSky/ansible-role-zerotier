@@ -26,7 +26,6 @@
 
 - name: Setup ZeroTier Network 
   zerotier:
-    name: "{{item.key}}"
     apikey: "{{item.value.apikey | default('')}}"
     nodename: "{{item.value.nodename | default(inventory_hostname)}}"
     nodedescription: "{{item.value.nodedescription | default('')}}"

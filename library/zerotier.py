@@ -99,23 +99,17 @@ from ansible.module_utils._text import to_bytes
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.urls import open_url
 
-
 class ZeroTierNode(object):
     """
-    Zerotier manipulation class
+    Zerotier Node Class
     """
 
     def __init__(self, module):
         self.api_url = "https://api.zerotier.com"
         self.module = module
-        self.network = module.params['name']
-        self.hidden = module.params['hidden']
-        self.nodename = module.params['nodename']
-        self.nodedescription = module.params['nodedescription']
-        self.apikey = module.params['apikey']
-        self.joined = module.params['joined']
-        self.config = module.params['config']
-        self.node = self.getNodeID()
+        self.nodename = module.params['name']
+        self.networks = module.params['networks']
+        self.localconfig = module.params['localconfig']
 
         # Set Defaults
         self.result = {}
@@ -129,7 +123,17 @@ class ZeroTierNode(object):
             return True
         else:
             return False
-
+    
+    def getZeroTierClientAccess(self):
+        """
+        Check if the zerotier-cli client can reach the zerotier-one instance running on node
+        """
+        command_result =  self.module.run_command(['zerotier-cli', 'listnetworks', 'info'])
+        if command_result[0] != 0:
+            return False
+        else:
+            return True
+        
     def getNodeID(self):
         """
         Gets local ZeroTier Network ID
@@ -137,26 +141,45 @@ class ZeroTierNode(object):
         with open('/var/lib/zerotier-one/identity.public', 'r') as fh:
             node = fh.readline().split(":")[0]
         return node
-
-    def getJoinStatus(self):
+    
+    def getJoinedNetworks(self):
         """
-        Checks if node has joined the target network
+        Get networks that are joined in the local ZT Node
         """
-        return os.path.exists("/var/lib/zerotier-one/networks.d/" + self.network + '.conf')
+        result =  self.module.run_command(['zerotier-cli', 'listnetworks', '-j', '|', 'jq', '-r', '[.[].nwid]'])
+        json_result=json.loads(result[1])
+        return json_result
+    
+    def checkAPIKey(self, network):
+            """
+            Check if ZeroTier API Key works
+            """
+            api_url = self.api_url + '/api/network/' + network
+            api_auth = {'Authorization': 'token ' + self.apikey, 'Content-Type': 'application/json'}
+            try:
+                raw_resp = open_url(api_url, headers=api_auth, validate_certs=True)
+                if raw_resp.getcode() == 403:
+                    self.module.fail_json(changed=False, msg="Unable to authenticate with ZeroTier API!")
+                elif raw_resp.getcode() == 404:
+                    self.module.fail_json(changed=False, msg="ZeroTier network does not exist")
+                elif raw_resp.getcode() == 200:
+                    return True
+            except Exception as e:
+                self.module.fail_json(changed=False, msg="Unable to reach ZeroTier API", reason=str(e))
 
-    def joinNetwork(self):
+    def joinNetwork(self, network):
         """
         Join node to network
         """
-        result =  self.module.run_command(['zerotier-cli', 'join', self.network])
+        result =  self.module.run_command(['zerotier-cli', 'join', network])
         self.result['changed'] = True
         return result
 
-    def leaveNetwork(self):
+    def leaveNetwork(self, network):
         """
         Removes node from network
         """
-        result = self.module.run_command(['zerotier-cli', 'leave', self.network])
+        result = self.module.run_command(['zerotier-cli', 'leave', network])
         self.result['changed'] = True
         return result
 
@@ -178,12 +201,12 @@ class ZeroTierNode(object):
         except Exception as e:
             self.module.fail_json(changed=False, msg="Unable to set config of ZeroTier node " + self.node, reason=str(e))
 
-    def getNodeConfig(self):
+    def getNodeConfig(self, network):
         """
         Gets node configuration
         """
-        api_url = self.api_url + '/api/network/' + self.network + '/member/' + self.node
-        api_auth = {'Authorization': 'token ' + self.apikey, 'Content-Type': 'application/json'}
+        api_url = self.api_url + '/api/network/' + network + '/member/' + self.nodename
+        api_auth = {'Authorization': 'token ' + self.networks[network]['apikey'], 'Content-Type': 'application/json'}
         try:
             raw_resp = open_url(api_url, headers=api_auth, method="GET")
             if raw_resp.getcode() == 403:
@@ -196,12 +219,12 @@ class ZeroTierNode(object):
         except Exception as e:
             self.module.fail_json(changed=False, msg="Unable to get config of ZeroTier node " + self.node, reason=str(e))
 
-    def buildNodeConfig(self):
-        current_full_node_config = self.getNodeConfig()
+    def buildNodeConfig(self, network, hidden, nodename, nodedescription, config):
+        current_full_node_config = self.getNodeConfig(network)
 
         # Seperate the config key for clarity
         node_config = current_full_node_config['config']
-        node_config.update(self.config)
+        node_config.update(config)
 
         # Set config key
         if node_config != current_full_node_config['config']:
@@ -209,46 +232,24 @@ class ZeroTierNode(object):
             current_full_node_config['config'] = node_config
 
         # Set some additional variables
-        if current_full_node_config['hidden'] != self.hidden:
+        if current_full_node_config['hidden'] != hidden:
             self.result['changed'] = True
-            current_full_node_config['hidden'] = self.hidden
-        if current_full_node_config['name'] != self.nodename:
+            current_full_node_config['hidden'] = hidden
+        if current_full_node_config['name'] != nodename:
             self.result['changed'] = True
-            current_full_node_config['name'] = self.nodename
-        if current_full_node_config['description'] != self.nodedescription:
+            current_full_node_config['name'] = nodename
+        if current_full_node_config['description'] != nodedescription:
             self.result['changed'] = True
-            current_full_node_config['description'] = self.nodedescription
+            current_full_node_config['description'] = nodedescription
 
         # Send it away
         self.setNodeConfig(current_full_node_config)
 
-    def checkAPIKey(self):
-            """
-            Check if ZeroTier API Key works
-            """
-            api_url = self.api_url + '/api/network/' + self.network
-            api_auth = {'Authorization': 'token ' + self.apikey, 'Content-Type': 'application/json'}
-            try:
-                raw_resp = open_url(api_url, headers=api_auth, validate_certs=True)
-                if raw_resp.getcode() == 403:
-                    self.module.fail_json(changed=False, msg="Unable to authenticate with ZeroTier API!")
-                elif raw_resp.getcode() == 404:
-                    self.module.fail_json(changed=False, msg="ZeroTier network does not exist")
-                elif raw_resp.getcode() == 200:
-                    return True
-            except Exception as e:
-                self.module.fail_json(changed=False, msg="Unable to reach ZeroTier API", reason=str(e))
-
-    def applyJoinStatus(self):
-        if self.getZeroTierInstallStatus():
-            if self.joined and not self.getJoinStatus():
-                self.joinNetwork()
-            elif not self.joined and self.getJoinStatus():
-                self.leaveNetwork()
-            return True
-        else:
-            self.module.fail_json(changed=False,
-                                  msg="ZeroTier installation cannot be located in $PATH. Check your installation.")
+    def compareTargetJoinedNetworks(self):
+        remove_networks = list(set(self.getJoinedNetworks()) - set(self.networks.keys()))
+        add_networks = list(set(self.networks.keys()) - set(self.getJoinedNetworks()))
+        return (add_networks, remove_networks)
+        
 
 def main():
     ssh_defaults = dict(
@@ -257,22 +258,44 @@ def main():
         passphrase=None,
         comment='ansible-generated on %s' % socket.gethostname()
     )
-    module = AnsibleModule(
+
+    # Init Node Config
+    ansible_module = AnsibleModule(
         argument_spec=dict(
             name=dict(type='str', required=True),
-            nodename=dict(type='str', required=False, default=""),
-            nodedescription=dict(type='str', required=False, default=""),
-            config=dict(type='dict', required=False, default={}),
-            hidden=dict(type='bool', required=False, default=False),
-            joined=dict(type='bool', required=False, default=True),
-            apikey=dict(type='str', required=False, no_log=True, default=""),
+            networks=dict(type='str', required=False, default={}),
+            localconfig=dict(type='dict', required=False, default={})
         ),
         supports_check_mode=True,
     )
-    zerotier = ZeroTierNode(module)
-    # Set Join or not joined
-    zerotier.applyJoinStatus()
-    time.sleep(15)
+    zerotier_node = ZeroTierNode(ansible_module)
+
+    # Checks to make sure this can run properly
+
+    ## Make sure we can run zerotier-cli
+    if zerotier_node.getZeroTierInstallStatus == False:
+        ansible_module.fail_json(changed=False, msg="ZeroTier installation cannot be located in $PATH. Check your installation.")
+
+    ## Make sure the zerotier-cli client can connect to the node
+    if zerotier_node.getZeroTierClientAccess == False:
+       ansible_module.fail_json(changed=False, msg="ZeroTier client cannot reach node config, check if ZeroTier is running and the user running the client can access credentials.")
+
+    # Compare list of target networks and currently joined networks
+    zerotier_add_networks, zerotier_remove_networks = zerotier_node.compareTargetJoinedNetworks()
+
+    # Join Networks
+    for network in zerotier_add_networks:
+        zerotier_node.checkAPIKey(network)
+        zerotier_node.joinNetwork(network)
+
+    # Leave Networks
+    for network in zerotier_remove_networks:
+        zerotier_node.checkAPIKey(network)
+        zerotier_node.leaveNetwork(network)
+
+    # Sleep to make sure API has received data
+    time.sleep(10)
+
 
     if zerotier.joined:
         # Check if API Key is valid for the specified network
