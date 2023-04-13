@@ -160,7 +160,7 @@ class ZeroTierNode(object):
                 zerotier_token = f.readlines()
         except Exception as e:
             self.module.fail_json(changed=False, msg="Unable to read auth token of currently running ZeroTier Node", reason=str(e))
-        return(zerotier_token)
+        return(zerotier_token[0])
     
     def getJoinedNetworks(self):
         """
