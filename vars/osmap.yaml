@@ -4,32 +4,38 @@ Ubuntu:
     packages:
       - gpg
       - gnupg2
+      - python3-psutil
   bionic:
     zerotier_repo: deb https://download.zerotier.com/debian/bionic bionic main
     packages:
       - gpg
       - gnupg2
+      - python3-psutil
   jammy:
     zerotier_repo: deb https://download.zerotier.com/debian/jammy jammy main
     packages:
       - gpg
       - gnupg2
+      - python3-psutil
 Debian:
   bullseye:
     zerotier_repo: deb https://download.zerotier.com/debian/bullseye bullseye main
     packages:
       - gpg
       - gnupg2
+      - python3-psutil
   buster:
     zerotier_repo: deb https://download.zerotier.com/debian/buster buster main
     packages:
       - gpg
       - gnupg2
+      - python3-psutil
   stretch:
     zerotier_repo: deb https://download.zerotier.com/debian/stretch stretch main
     packages:
       - gpg
       - gnupg2
+      - python3-psutil
 CentOS:
   "8":
     zerotier_repo: http://download.zerotier.com/redhat/el/8
