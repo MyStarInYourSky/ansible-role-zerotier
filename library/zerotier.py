@@ -174,7 +174,7 @@ class ZeroTierNode(object):
                 self.module.fail_json(changed=False, msg="Unable to authenticate with local ZeroTier service with local authtoken")
             else:
                 resp_json = json.loads(raw_resp.read())
-                networks = [networkconfig.nwid for networkconfig in resp_json]
+                networks = [networkconfig['nwid'] for networkconfig in resp_json]
                 return(networks)
         except Exception as e:
             self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service", reason=str(e))
