@@ -112,7 +112,6 @@ class ZeroTierNode(object):
         self.module = module
         self.nodename = module.params['name']
         self.networks = module.params['networks']
-        self.localconfig = module.params['localconfig']
 
         # Set Defaults
         self.result = {}
@@ -147,7 +146,7 @@ class ZeroTierNode(object):
             if resp_json['online'] == True:
                 run_count = max_run_wait
             run_count +=1
-            time.sleep(1)
+            time.sleep(2)
 
         return(resp_json)
 
@@ -304,7 +303,6 @@ def main():
         argument_spec=dict(
             name=dict(type='str', required=True),
             networks=dict(type='dict', required=False, default={}),
-            localconfig=dict(type='dict', required=False, default={})
         ),
         supports_check_mode=True,
     )
