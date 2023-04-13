@@ -5,59 +5,40 @@ __metaclass__ = type
 DOCUMENTATION = '''
 ---
 module: zerotier
-version_added: "0.0.1"
+version_added: "0.0.2"
 short_description: Manages Zerotier
 description:
     - Manages ZeroTier on a host
 options:
     name:
         description:
-            - ID of the ZeroTier network to manage
+            - Name of the current Node
         type: str
         required: true
-    nodename:
+
+    networks:
         description:
-            - Sets the alias of the remote host in the ZeroTier network
-        type: str
-        required: false
-    nodedescription:
-        description:
-            - Sets the description of the remote host in the ZeroTier network
-        type: str
-        required: false
-    config:
-        description:
-            - Sets the ZeroTier node config
+            - Networks as well as network configurations for the host
         type: dict
-        required: false
-    hidden:
-        description:
-            - Whether the remote host should be hidden in the ZeroTier network
-        type: boolean
-        choices: [ yes, no ]
-        default: yes
-    apikey:
-        description:
-            - The API key used for ZeroTier API calls
-        type: str
         required: true
-    joined:
-        description:
-            - Whether the remote host has joined the ZeroTier network
-        type: boolean
-        choices: [ yes, no ]
-        default: yes
 
 author:
-- ILoveYaToo (@iloveyatoo)
+- MyStarInYourSky (@mystarinyoursky)
 '''
 
 EXAMPLES = '''
 - name: Add host to ZeroTier Network
   zerotier:
     name: zz12345
-    auth: yes
-    apikey: mykey12345
+    networks:
+        123456:
+            apikey: somekey
+            nodedescription: someserver
+            config:
+                authorized: True
+                hidden: False
+                tags:
+                    - [1001, 2001]
 '''
 
 RETURN = r'''
@@ -66,26 +47,11 @@ name:
   returned: always
   type: str
   sample: zz12345
-auth:
-  description: Whether the remote host is authenticated in the ZeroTier network
+networks:
+  description: Networks as well as network configurations for the host
   returned: always
-  type: bool
+  type: dict
   sample: True
-hidden:
-  description: Whether the remote host is hidden in the ZeroTier network
-  returned: always
-  type: bool
-  sample: False
-nodename:
-  description: Alias of the remote host in the ZeroTier network
-  returned: always
-  type: str
-  sample: MyHost
-joined:
-  description: Whether the remote host has joined the ZeroTier network
-  returned: always
-  type: bool
-  sample: False  
 '''
 
 import grp
