@@ -26,12 +26,7 @@
 
 - name: Setup ZeroTier Network 
   zerotier:
-    apikey: "{{item.value.apikey | default('')}}"
-    nodename: "{{item.value.nodename | default(inventory_hostname)}}"
-    nodedescription: "{{item.value.nodedescription | default('')}}"
-    config: "{{item.value.config | default('{}')}}"
-    hidden: "{{item.value.hidden | default(False)}}"
-    joined: "{{item.value.joined| default(True)}}"
-  loop: "{{lookup('dict', zerotier_networks, wantlist=True)}}"
-  loop_control:
-    label: "{{ item.key }}"
+    name: "{{inventory_hostname}}"
+    networks: "{{zerotier_networks | default({})}}"
+    localconfig: "{{zerotier_localconfig | default({})}}"
+

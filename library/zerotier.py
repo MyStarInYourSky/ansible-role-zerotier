@@ -278,9 +278,9 @@ class ZeroTierNode(object):
             self.result['changed'] = True
             current_full_node_config['config'] = node_config
 
-        if current_full_node_config['name'] != self.nodeid:
+        if current_full_node_config['name'] != self.nodename:
             self.result['changed'] = True
-            current_full_node_config['name'] = self.nodeid
+            current_full_node_config['name'] = self.nodename
 
         # Send it away
         self.setNodeConfig(current_full_node_config)
