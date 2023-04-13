@@ -94,6 +94,8 @@ import socket
 import shutil
 import json
 import time
+import os.path
+import psutil
 
 from ansible.module_utils._text import to_bytes
 from ansible.module_utils.basic import AnsibleModule
@@ -105,6 +107,7 @@ class ZeroTierNode(object):
     """
 
     def __init__(self, module):
+        self.local_api_url = "http://localhost:9993"
         self.api_url = "https://api.zerotier.com"
         self.module = module
         self.nodename = module.params['name']
@@ -115,80 +118,124 @@ class ZeroTierNode(object):
         self.result = {}
         self.result['changed'] = False
 
-    def getZeroTierInstallStatus(self):
+        # Get Local ZT Token
+        self.local_api_token = self.getZeroTierAuthToken()
+
+        # Get ZT Status
+        self.local_config = self.getZeroTierStatus()
+        self.nodeid = self.local_config['address']
+
+    def getZeroTierStatus(self):
         """
-        Check if ZeroTier is installed
+        Check if ZeroTier is installed, running, and accessible
+        Make sure we can get and return the authtoken
         """
-        if shutil.which("zerotier-cli"):
-            return True
-        else:
-            return False
-    
-    def getZeroTierClientAccess(self):
+        api_url = self.local_api_url + '/status'
+        api_auth = {'X-ZT1-Auth': + self.local_api_token, 'Content-Type': 'application/json'}
+        try:
+            raw_resp = open_url(api_url, headers=api_auth, validate_certs=True, method='GET', timeout=10)
+            if raw_resp.getcode() != 200:
+                self.module.fail_json(changed=False, msg="Unable to authenticate with local ZeroTier service with local authtoken")
+        except Exception as e:
+            self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service", reason=str(e))
+        resp_json = json.loads(raw_resp.read())
+
+        # Make sure node is online before we proceed
+        run_count = 0
+        max_run_wait = 10
+        while run_count <= max_run_wait:
+            if resp_json['online'] == True:
+                run_count = max_run_wait
+            run_count +=1
+            time.sleep(1)
+
+        return(resp_json)
+
+    def getZeroTierAuthToken(self):
         """
-        Check if the zerotier-cli client can reach the zerotier-one instance running on node
+        Get authtoken required for local zerotier-one API calls
         """
-        command_result =  self.module.run_command(['zerotier-cli', 'listnetworks', 'info'])
-        if command_result[0] != 0:
-            return False
-        else:
-            return True
-        
-    def getNodeID(self):
-        """
-        Gets local ZeroTier Network ID
-        """
-        with open('/var/lib/zerotier-one/identity.public', 'r') as fh:
-            node = fh.readline().split(":")[0]
-        return node
+        try:
+            with open('/var/lib/zerotier-one/authtoken.secret') as f:
+                zerotier_token = f.readlines()
+        except Exception as e:
+            self.module.fail_json(changed=False, msg="Unable to read auth token of currently running ZeroTier Node", reason=str(e))
+        return(zerotier_token)
     
     def getJoinedNetworks(self):
         """
         Get networks that are joined in the local ZT Node
         """
-        result =  self.module.run_command(['zerotier-cli', 'listnetworks', '-j', '|', 'jq', '-r', '[.[].nwid]'])
-        json_result=json.loads(result[1])
-        return json_result
+        api_url = self.local_api_url + '/network'
+        api_auth = {'X-ZT1-Auth': + self.local_api_token, 'Content-Type': 'application/json'}
+        try:
+            raw_resp = open_url(api_url, headers=api_auth, validate_certs=True, method='GET', timeout=10)
+            if raw_resp.getcode() != 200:
+                self.module.fail_json(changed=False, msg="Unable to authenticate with local ZeroTier service with local authtoken")
+            else:
+                resp_json = json.loads(raw_resp.read())
+                networks = [networkconfig.nwid for networkconfig in resp_json]
+                return(networks)
+        except Exception as e:
+            self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service", reason=str(e))
     
     def checkAPIKey(self, network):
-            """
-            Check if ZeroTier API Key works
-            """
-            api_url = self.api_url + '/api/network/' + network
-            api_auth = {'Authorization': 'token ' + self.apikey, 'Content-Type': 'application/json'}
-            try:
-                raw_resp = open_url(api_url, headers=api_auth, validate_certs=True)
-                if raw_resp.getcode() == 403:
-                    self.module.fail_json(changed=False, msg="Unable to authenticate with ZeroTier API!")
-                elif raw_resp.getcode() == 404:
-                    self.module.fail_json(changed=False, msg="ZeroTier network does not exist")
-                elif raw_resp.getcode() == 200:
-                    return True
-            except Exception as e:
-                self.module.fail_json(changed=False, msg="Unable to reach ZeroTier API", reason=str(e))
+        """
+        Check if ZeroTier API Key works
+        """
+        api_url = self.api_url + '/api/network/' + network
+        api_auth = {'Authorization': 'token ' + self.apikey, 'Content-Type': 'application/json'}
+        try:
+            raw_resp = open_url(api_url, headers=api_auth, validate_certs=True, method='GET', timeout=10)
+            if raw_resp.getcode() == 403:
+                self.module.fail_json(changed=False, msg="Unable to authenticate with ZeroTier API!")
+            elif raw_resp.getcode() == 404:
+                self.module.fail_json(changed=False, msg="ZeroTier network does not exist")
+            elif raw_resp.getcode() == 200:
+                return True
+        except Exception as e:
+            self.module.fail_json(changed=False, msg="Unable to reach ZeroTier API", reason=str(e))
 
     def joinNetwork(self, network):
         """
         Join node to network
         """
-        result =  self.module.run_command(['zerotier-cli', 'join', network])
-        self.result['changed'] = True
-        return result
+        api_url = self.local_api_url + '/network'
+        api_auth = {'X-ZT1-Auth': + self.local_api_token, 'Content-Type': 'application/json'}
+        try:
+            raw_resp = open_url(api_url, headers=api_auth, validate_certs=True, method='POST', timeout=10)
+            if raw_resp.getcode() != 200:
+                self.module.fail_json(changed=False, msg="Unable to authenticate with local ZeroTier service with local authtoken")
+            else:
+                resp_json = json.loads(raw_resp.read())
+                networks = [networkconfig.nwid for networkconfig in resp_json]
+                return(networks)
+        except Exception as e:
+            self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service", reason=str(e))
 
     def leaveNetwork(self, network):
         """
-        Removes node from network
+        Remove node to network
         """
-        result = self.module.run_command(['zerotier-cli', 'leave', network])
-        self.result['changed'] = True
-        return result
+        api_url = self.local_api_url + '/network'
+        api_auth = {'X-ZT1-Auth': + self.local_api_token, 'Content-Type': 'application/json'}
+        try:
+            raw_resp = open_url(api_url, headers=api_auth, validate_certs=True, method='DELETE', timeout=10)
+            if raw_resp.getcode() != 200:
+                self.module.fail_json(changed=False, msg="Unable to authenticate with local ZeroTier service with local authtoken")
+            else:
+                resp_json = json.loads(raw_resp.read())
+                networks = [networkconfig.nwid for networkconfig in resp_json]
+                return(networks)
+        except Exception as e:
+            self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service", reason=str(e))
 
-    def setNodeConfig(self, config):
+    def setNodeConfig(self, config, network):
         """
         Sets node configuration
         """
-        api_url = f"{self.api_url}/api/network/{self.network}/member/{self.node}"
-        api_auth = {'Authorization': 'token ' + self.apikey, 'Content-Type': 'application/json'}
+        api_url = f"{self.api_url}/api/network/{network}/member/{self.nodeid}"
+        api_auth = {'Authorization': 'token ' + self.networks[network]['apikey'], 'Content-Type': 'application/json'}
         config_json = json.dumps(config)
         try:
             raw_resp = open_url(api_url, headers=api_auth, method="POST", data=config_json)
@@ -205,7 +252,7 @@ class ZeroTierNode(object):
         """
         Gets node configuration
         """
-        api_url = self.api_url + '/api/network/' + network + '/member/' + self.nodename
+        api_url = f"{self.api_url}/api/network/{network}/member/{self.nodeid}"
         api_auth = {'Authorization': 'token ' + self.networks[network]['apikey'], 'Content-Type': 'application/json'}
         try:
             raw_resp = open_url(api_url, headers=api_auth, method="GET")
@@ -219,28 +266,21 @@ class ZeroTierNode(object):
         except Exception as e:
             self.module.fail_json(changed=False, msg="Unable to get config of ZeroTier node " + self.node, reason=str(e))
 
-    def buildNodeConfig(self, network, hidden, nodename, nodedescription, config):
+    def buildNodeConfig(self, network):
         current_full_node_config = self.getNodeConfig(network)
 
         # Seperate the config key for clarity
         node_config = current_full_node_config['config']
-        node_config.update(config)
+        node_config.update(self.networks[network['config']])
 
         # Set config key
         if node_config != current_full_node_config['config']:
             self.result['changed'] = True
             current_full_node_config['config'] = node_config
 
-        # Set some additional variables
-        if current_full_node_config['hidden'] != hidden:
+        if current_full_node_config['name'] != self.nodeid:
             self.result['changed'] = True
-            current_full_node_config['hidden'] = hidden
-        if current_full_node_config['name'] != nodename:
-            self.result['changed'] = True
-            current_full_node_config['name'] = nodename
-        if current_full_node_config['description'] != nodedescription:
-            self.result['changed'] = True
-            current_full_node_config['description'] = nodedescription
+            current_full_node_config['name'] = self.nodeid
 
         # Send it away
         self.setNodeConfig(current_full_node_config)
@@ -270,16 +310,6 @@ def main():
     )
     zerotier_node = ZeroTierNode(ansible_module)
 
-    # Checks to make sure this can run properly
-
-    ## Make sure we can run zerotier-cli
-    if zerotier_node.getZeroTierInstallStatus == False:
-        ansible_module.fail_json(changed=False, msg="ZeroTier installation cannot be located in $PATH. Check your installation.")
-
-    ## Make sure the zerotier-cli client can connect to the node
-    if zerotier_node.getZeroTierClientAccess == False:
-       ansible_module.fail_json(changed=False, msg="ZeroTier client cannot reach node config, check if ZeroTier is running and the user running the client can access credentials.")
-
     # Compare list of target networks and currently joined networks
     zerotier_add_networks, zerotier_remove_networks = zerotier_node.compareTargetJoinedNetworks()
 
@@ -296,18 +326,15 @@ def main():
     # Sleep to make sure API has received data
     time.sleep(10)
 
+    # Set Node Config
+    for network in zerotier_add_networks:
+        zerotier_node.buildNodeConfig(network)
 
-    if zerotier.joined:
-        # Check if API Key is valid for the specified network
-        zerotier.checkAPIKey()
-
-        # Apply Config
-        zerotier.buildNodeConfig()
-
-        if zerotier.result['changed']:
-            module.exit_json(changed=True, msg="Zerotier config updated")
-        else:
-            module.exit_json(changed=False, msg="Zerotier config unchanged")
+    # Emit status
+    if zerotier_node.result['changed']:
+        ansible_module.exit_json(changed=True, msg="Zerotier config updated")
+    else:
+        ansible_module.exit_json(changed=False, msg="Zerotier config unchanged")
 
 
 # import module snippets
