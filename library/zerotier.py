@@ -131,7 +131,7 @@ class ZeroTierNode(object):
         Make sure we can get and return the authtoken
         """
         api_url = self.local_api_url + '/status'
-        api_auth = {'X-ZT1-Auth': + self.local_api_token, 'Content-Type': 'application/json'}
+        api_auth = {'X-ZT1-Auth': self.local_api_token, 'Content-Type': 'application/json'}
         try:
             raw_resp = open_url(api_url, headers=api_auth, validate_certs=True, method='GET', timeout=10)
             if raw_resp.getcode() != 200:
@@ -167,7 +167,7 @@ class ZeroTierNode(object):
         Get networks that are joined in the local ZT Node
         """
         api_url = self.local_api_url + '/network'
-        api_auth = {'X-ZT1-Auth': + self.local_api_token, 'Content-Type': 'application/json'}
+        api_auth = {'X-ZT1-Auth': self.local_api_token, 'Content-Type': 'application/json'}
         try:
             raw_resp = open_url(api_url, headers=api_auth, validate_certs=True, method='GET', timeout=10)
             if raw_resp.getcode() != 200:
@@ -201,7 +201,7 @@ class ZeroTierNode(object):
         Join node to network
         """
         api_url = self.local_api_url + '/network'
-        api_auth = {'X-ZT1-Auth': + self.local_api_token, 'Content-Type': 'application/json'}
+        api_auth = {'X-ZT1-Auth': self.local_api_token, 'Content-Type': 'application/json'}
         try:
             raw_resp = open_url(api_url, headers=api_auth, validate_certs=True, method='POST', timeout=10)
             if raw_resp.getcode() != 200:
@@ -218,7 +218,7 @@ class ZeroTierNode(object):
         Remove node to network
         """
         api_url = self.local_api_url + '/network'
-        api_auth = {'X-ZT1-Auth': + self.local_api_token, 'Content-Type': 'application/json'}
+        api_auth = {'X-ZT1-Auth': self.local_api_token, 'Content-Type': 'application/json'}
         try:
             raw_resp = open_url(api_url, headers=api_auth, validate_certs=True, method='DELETE', timeout=10)
             if raw_resp.getcode() != 200:
