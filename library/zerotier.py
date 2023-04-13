@@ -303,7 +303,7 @@ def main():
     ansible_module = AnsibleModule(
         argument_spec=dict(
             name=dict(type='str', required=True),
-            networks=dict(type='str', required=False, default={}),
+            networks=dict(type='dict', required=False, default={}),
             localconfig=dict(type='dict', required=False, default={})
         ),
         supports_check_mode=True,
