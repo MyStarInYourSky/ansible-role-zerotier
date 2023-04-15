@@ -3,15 +3,16 @@
 This ansible role provides full control of node settings through the ZeroTier API as well as local settings.
 
 ## Features
- - Joining/Leaving of nodes from networks using API calls to the local ZT node API
+
+- Joining/Leaving of nodes from networks using API calls to the local ZT node API
 - Configuration of node settings in a network the node has joined
 - Local configuration of node settings (localconfig)
 
 ## Tested Operating Systems
 
-    - Ubuntu 18.04
-    - Ubuntu 20.04
-    - Ubuntu 22.04
+- Ubuntu 18.04
+- Ubuntu 20.04
+- Ubuntu 22.04
 
 ## Parameters
 
