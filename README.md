@@ -46,6 +46,10 @@ Can be retrieved from ZeroTier Central -> Account -> New Token
 
 This dict sets any config under the `config` section of a network member. See [here](https://docs.zerotier.com/central/v1/#operation/getNetworkMember) for possible configuration options. Very important for authorizing (i.e. `authorized: True`) nodes automatically.
 
+### `zerotier_localconfig`
+
+This dict contains configuration for [ZeroTier Local Configuration](https://docs.zerotier.com/zerotier/zerotier.conf/#local-configuration-options) (aka local.conf). It simply converts the YAML entered here to JSON and saves it as local.conf.
+
 ## Example Deployment
 
 ```yaml
