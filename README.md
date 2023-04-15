@@ -44,7 +44,7 @@ Can be retrieved from ZeroTier Central -> Account -> New Token
 
 ### `zerotier_config`
 
-This dict sets any config under the `config` secton of a network member. See [here](https://docs.zerotier.com/central/v1/#operation/updateNetworkMember) for more details. Very important for authorizing (i.e. `authorized: True`) nodes automatically.
+This dict sets any config under the `config` secton of a network member. See [here](https://docs.zerotier.com/central/v1/#operation/getNetworkMember) for more details. Very important for authorizing (i.e. `authorized: True`) nodes automatically.
 
 ## Example Deployment
 
