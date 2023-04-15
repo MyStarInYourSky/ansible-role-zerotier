@@ -236,7 +236,7 @@ class ZeroTierNode(object):
 
         # Seperate the config key for clarity
         node_config = current_full_node_config['config']
-        node_config.update(self.networks[network['config']])
+        node_config.update(self.networks[network]['config'])
 
         # Set config key
         if node_config != current_full_node_config['config']:
@@ -291,7 +291,7 @@ def main():
     time.sleep(10)
 
     # Set Node Config
-    for network in zerotier_add_networks:
+    for network in zerotier_node.getJoinedNetworks():
         zerotier_node.buildNodeConfig(network)
 
     # Emit status
