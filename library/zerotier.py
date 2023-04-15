@@ -171,10 +171,6 @@ class ZeroTierNode(object):
             raw_resp = open_url(api_url, headers=api_auth, validate_certs=True, method='POST', timeout=10)
             if raw_resp.getcode() != 200:
                 self.module.fail_json(changed=False, msg="Unable to authenticate with local ZeroTier service with local authtoken")
-            else:
-                resp_json = json.loads(raw_resp.read())
-                networks = [networkconfig['nwid'] for networkconfig in resp_json]
-                return(networks)
         except Exception as e:
             self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service (joinnetwork)", reason=str(e))
 
@@ -189,10 +185,6 @@ class ZeroTierNode(object):
             raw_resp = open_url(api_url, headers=api_auth, validate_certs=True, method='DELETE', timeout=10)
             if raw_resp.getcode() != 200:
                 self.module.fail_json(changed=False, msg="Unable to authenticate with local ZeroTier service with local authtoken")
-            else:
-                resp_json = json.loads(raw_resp.read())
-                networks = [networkconfig['nwid'] for networkconfig in resp_json]
-                return(networks)
         except Exception as e:
             self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service (leavenetwork)", reason=str(e))
 
