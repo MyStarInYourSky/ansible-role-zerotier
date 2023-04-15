@@ -248,7 +248,7 @@ class ZeroTierNode(object):
             current_full_node_config['name'] = self.nodename
 
         # Send it away
-        self.setNodeConfig(current_full_node_config)
+        self.setNodeConfig(current_full_node_config, network)
 
     def compareTargetJoinedNetworks(self):
         remove_networks = list(set(self.getJoinedNetworks()) - set(self.networks.keys()))
