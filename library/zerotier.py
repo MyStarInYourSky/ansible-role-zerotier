@@ -165,7 +165,7 @@ class ZeroTierNode(object):
         """
         Join node to network
         """
-        api_url = self.local_api_url + '/network' + network
+        api_url = self.local_api_url + '/network/' + network
         api_auth = {'X-ZT1-Auth': self.local_api_token, 'Content-Type': 'application/json'}
         try:
             raw_resp = open_url(api_url, headers=api_auth, validate_certs=True, method='POST', timeout=10)
@@ -182,7 +182,7 @@ class ZeroTierNode(object):
         """
         Remove node to network
         """
-        api_url = self.local_api_url + '/network' + network
+        api_url = self.local_api_url + '/network/' + network
         api_auth = {'X-ZT1-Auth': self.local_api_token, 'Content-Type': 'application/json'}
         try:
             raw_resp = open_url(api_url, headers=api_auth, validate_certs=True, method='DELETE', timeout=10)
