@@ -149,7 +149,7 @@ class ZeroTierNode(object):
         Check if ZeroTier API Key works
         """
         api_url = self.api_url + '/api/network/' + network
-        api_auth = {'Authorization': 'token ' + self.apikey, 'Content-Type': 'application/json'}
+        api_auth = {'Authorization': 'token ' + self.networks[network]['apikey'], 'Content-Type': 'application/json'}
         try:
             raw_resp = open_url(api_url, headers=api_auth, validate_certs=True, method='GET', timeout=10)
             if raw_resp.getcode() == 403:
