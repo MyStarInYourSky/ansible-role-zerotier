@@ -247,9 +247,9 @@ class ZeroTierNode(object):
             self.result['changed'] = True
             current_full_node_config['name'] = self.nodename
 
-        if current_full_node_config['description'] != self.networks[network]['nodedescription:']:
+        if current_full_node_config['description'] != self.networks[network]['nodedescription']:
             self.result['changed'] = True
-            current_full_node_config['description'] = self.networks[network]['nodedescription:']
+            current_full_node_config['description'] = self.networks[network]['nodedescription']
 
         # Send it away
         if self.result['changed'] == True:
