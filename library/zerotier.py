@@ -77,7 +77,6 @@ class ZeroTierNode(object):
         self.api_url = "https://api.zerotier.com"
         self.module = module
         self.nodename = module.params['name']
-        self.nodedescription = module.params['description']
         self.networks = module.params['networks']
 
         # Set Defaults
@@ -248,9 +247,9 @@ class ZeroTierNode(object):
             self.result['changed'] = True
             current_full_node_config['name'] = self.nodename
 
-        if current_full_node_config['description'] != self.nodedescription:
+        if current_full_node_config['description'] != self.networks[network]['description']:
             self.result['changed'] = True
-            current_full_node_config['description'] = self.nodedescription
+            current_full_node_config['description'] = self.networks[network]['description']
 
         # Send it away
         if self.result['changed'] == True:

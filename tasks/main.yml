@@ -28,3 +28,4 @@
   zerotier:
     name: "{{inventory_hostname}}"
     networks: "{{zerotier_networks | default({})}}"
+    
