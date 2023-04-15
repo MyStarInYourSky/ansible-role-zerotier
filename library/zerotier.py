@@ -102,7 +102,7 @@ class ZeroTierNode(object):
             if raw_resp.getcode() != 200:
                 self.module.fail_json(changed=False, msg="Unable to authenticate with local ZeroTier service with local authtoken")
         except Exception as e:
-            self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service", reason=str(e))
+            self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service (status)", reason=str(e))
         resp_json = json.loads(raw_resp.read())
 
         # Make sure node is online before we proceed
@@ -142,7 +142,7 @@ class ZeroTierNode(object):
                 networks = [networkconfig['nwid'] for networkconfig in resp_json]
                 return(networks)
         except Exception as e:
-            self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service", reason=str(e))
+            self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service (getjoinednetworks)", reason=str(e))
     
     def checkAPIKey(self, network):
         """
@@ -176,7 +176,7 @@ class ZeroTierNode(object):
                 networks = [networkconfig.nwid for networkconfig in resp_json]
                 return(networks)
         except Exception as e:
-            self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service", reason=str(e))
+            self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service (joinnetwork)", reason=str(e))
 
     def leaveNetwork(self, network):
         """
@@ -193,7 +193,7 @@ class ZeroTierNode(object):
                 networks = [networkconfig.nwid for networkconfig in resp_json]
                 return(networks)
         except Exception as e:
-            self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service", reason=str(e))
+            self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service (leavenetwork)", reason=str(e))
 
     def setNodeConfig(self, config, network):
         """
