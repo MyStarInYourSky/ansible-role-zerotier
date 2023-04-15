@@ -25,10 +25,13 @@ The zerotier version that will be installed
 Configuration of zerotier networks that the node will join.
 
 It uses the following structure
+
+```yaml
 {{zerotier network id}}:
     apikey: {{zerotier_api_key}}
     nodedescription: zerotier node description
     config: {{zerotier_config}}
+```
 
 ### `zerotier_network_id`
 
