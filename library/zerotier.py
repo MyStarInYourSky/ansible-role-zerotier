@@ -182,6 +182,7 @@ class ZeroTierNode(object):
         """
         Remove node to network
         """
+        # TODO add option to leave a network config with it set to "disabled" so that nodes can be removed both central and local
         api_url = self.local_api_url + '/network/' + network
         api_auth = {'X-ZT1-Auth': self.local_api_token, 'Content-Type': 'application/json'}
         try:
@@ -289,7 +290,7 @@ def main():
 
     # Leave Networks
     for network in zerotier_remove_networks:
-        zerotier_node.checkAPIKey(network)
+        #zerotier_node.checkAPIKey(network)
         zerotier_node.leaveNetwork(network)
 
     # Sleep to make sure API has received data
