@@ -1,1 +1,13 @@
----
+namespace: "iloveyatoo"
+name: "zerotier"
+version: "0.1"
+readme: "README.md"
+authors:
+    - "MyStarInYourSky (https://github.com/MyStarInYourSky)"
+dependencies: []
+license:
+    - "MIT"
+tags:
+    - zerotier
+    - vpn
+repository: "https://github.com/ILoveYaToo/ansible-role-zerotier/"
