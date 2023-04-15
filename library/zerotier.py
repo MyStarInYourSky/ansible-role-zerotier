@@ -97,18 +97,18 @@ class ZeroTierNode(object):
         """
         api_url = self.local_api_url + '/status'
         api_auth = {'X-ZT1-Auth': self.local_api_token, 'Content-Type': 'application/json'}
-        try:
-            raw_resp = open_url(api_url, headers=api_auth, validate_certs=True, method='GET', timeout=10)
-            if raw_resp.getcode() != 200:
-                self.module.fail_json(changed=False, msg="Unable to authenticate with local ZeroTier service with local authtoken")
-        except Exception as e:
-            self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service (status)", reason=str(e))
-        resp_json = json.loads(raw_resp.read())
-
-        # Make sure node is online before we proceed
         run_count = 0
         max_run_wait = 10
         while run_count <= max_run_wait:
+            try:
+                raw_resp = open_url(api_url, headers=api_auth, validate_certs=True, method='GET', timeout=10)
+                if raw_resp.getcode() != 200:
+                    self.module.fail_json(changed=False, msg="Unable to authenticate with local ZeroTier service with local authtoken")
+            except Exception as e:
+                self.module.fail_json(changed=False, msg="Unable to reach local ZeroTier service (status)", reason=str(e))
+            resp_json = json.loads(raw_resp.read())
+
+            # Make sure node is online before we proceed
             if resp_json['online'] == True:
                 run_count = max_run_wait
             run_count +=1
