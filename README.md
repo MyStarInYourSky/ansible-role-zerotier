@@ -4,7 +4,7 @@ This ansible role provides full control of node settings through the ZeroTier AP
 
 ## Features
 
-- Joining/Leaving of nodes from networks using API calls to the local ZT node API
+- Joining/Leaving of nodes from networks using API calls to the local ZeroTier node API
 - Configuration of node settings in a network the node has joined
 - Local configuration of node settings (localconfig)
 
@@ -18,11 +18,11 @@ This ansible role provides full control of node settings through the ZeroTier AP
 
 ### `zerotier_version`
 
-The zerotier version that will be installed
+The ZeroTier version that will be installed
 
 ### `zerotier_networks`
 
-Configuration of zerotier networks that the node will join.
+Configuration of ZeroTier networks that the node will join.
 
 It uses the following structure
 
@@ -35,11 +35,11 @@ It uses the following structure
 
 ### `zerotier_network_id`
 
-This is the ID of the zerotier network the node is to join
+This is the ID of the ZeroTier network the node is to join
 
 ### `zerotier_api_key`
 
-This is the API key used for your zerotier account.
+This is the API key used for your ZeroTier account.
 Can be retrieved from ZeroTier Central -> Account -> New Token
 
 ### `zerotier_config`
