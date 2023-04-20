@@ -256,7 +256,7 @@ class ZeroTierNode(object):
         add_networks = []
         remove_networks = []
 
-        for network, network_config in self.networks.iter():
+        for network, network_config in self.networks.items():
             if (not "enabled" in network_config or network_config['enabled'] == True) and network not in joined_networks:
                 add_networks.append(network)
             if "enabled" in network_config and network_config['enabled'] == False and network in joined_networks:
