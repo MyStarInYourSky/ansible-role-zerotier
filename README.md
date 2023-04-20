@@ -54,6 +54,7 @@ zerotier_networks:
   12345:
     apikey: myapikey
     nodedescription: myserver
+    enabled: True
     config:
       authorized: True
       tags:
