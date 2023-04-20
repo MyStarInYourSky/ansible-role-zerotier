@@ -252,10 +252,22 @@ class ZeroTierNode(object):
             self.setNodeConfig(current_full_node_config, network)
 
     def compareTargetJoinedNetworks(self):
-        remove_networks = list(set(self.getJoinedNetworks()) - set(self.networks.keys()))
-        add_networks = list(set(self.networks.keys()) - set(self.getJoinedNetworks()))
+        joined_networks = self.getJoinedNetworks()
+        add_networks = []
+        remove_networks = []
+
+        for network, network_config in self.networks.iter():
+            if (not "enabled" in network_config or network_config['enabled'] == True) and network not in joined_networks:
+                add_networks.append(network)
+            if "enabled" in network_config and network_config['enabled'] == False and network in joined_networks:
+                remove_networks.append(network)
+
+        for network in joined_networks:
+            if network not in self.networks:
+                remove_networks.append(network)
+
         return (add_networks, remove_networks)
-        
+
 
 def main():
     ssh_defaults = dict(
