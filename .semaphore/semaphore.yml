@@ -7,6 +7,8 @@ agent:
 blocks:
   - name: Install Ansible Molecule
     task:
+      secrets:
+        - name: SSH_KEY
       jobs:
         - name: 'Run Ansible'
           commands:
