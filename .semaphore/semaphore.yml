@@ -21,3 +21,4 @@ blocks:
             - sem-version python 3.9
             - python --version
             - pip3 install -r molecule/requirements.txt
+            - molecule test
