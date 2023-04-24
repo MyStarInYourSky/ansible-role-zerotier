@@ -11,3 +11,6 @@ tags:
     - zerotier
     - vpn
 repository: "https://github.com/ILoveYaToo/ansible-role-zerotier/"
+galaxy_info:
+  role_name: zerotier
+  namespace: iloveyatoo
