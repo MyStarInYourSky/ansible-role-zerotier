@@ -16,4 +16,5 @@ blocks:
             - ssh-add ~/.ssh/id_ed25519
             - checkout
             - cd ${ANSIBLE_PROJECT}
+            - ls -la
             - pip3 install -r molecule/requirements.txt
