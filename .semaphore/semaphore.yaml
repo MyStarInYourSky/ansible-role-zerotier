@@ -1,0 +1,13 @@
+version: "v1.0"
+name: Ansible Molecule
+agent:
+  machine:
+    type: e1-standard-4
+    os_image: ubuntu2004
+blocks:
+  - name: Install Ansible Molecule
+    task:
+      jobs:
+        - name: Install python requirements
+          commands:
+            - pip3 install -r molecule/requirements.txt
