@@ -7,6 +7,9 @@ agent:
 blocks:
   - name: Install Ansible Molecule
     task:
+      env_vars:
+        - name: VAGRANT_VERSION
+          value: "2.3.4"
       secrets:
         - name: SSH_KEY
       jobs:
@@ -14,6 +17,9 @@ blocks:
           commands:
             - chmod 0600 ~/.ssh/id_ed25519.pub ~/.ssh/id_ed25519
             - ssh-add ~/.ssh/id_ed25519
+            - wget https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip
+            - unzip vagrant_${VAGRANT_VERSION}_linux_amd64.zip
+            - mv vagrant /usr/local/bin/
             - checkout
             - cd ${ANSIBLE_PROJECT}
             - mv ansible-role-zerotier zerotier
