@@ -15,6 +15,5 @@ blocks:
             - chmod 0600 ~/.ssh/id_ed25519.pub ~/.ssh/id_ed25519
             - ssh-add ~/.ssh/id_ed25519
             - checkout
-            - cd ${ANSIBLE_PROJECT}
-            - ls -la
+            - cd ${ANSIBLE_PROJECT}/ansible-role-zerotier
             - pip3 install -r molecule/requirements.txt
