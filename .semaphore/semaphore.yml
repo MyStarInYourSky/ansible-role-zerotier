@@ -16,8 +16,8 @@ blocks:
             - ssh-add ~/.ssh/id_ed25519
             - checkout
             - cd ${ANSIBLE_PROJECT}
-            - ls -la
-            - cd ansible-role-zerotier
+            - mv ansible-role-zerotier zerotier
+            - cd zerotier
             - sem-version python 3.9
             - python --version
             - pip3 install -r molecule/requirements.txt
