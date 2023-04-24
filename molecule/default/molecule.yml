@@ -18,9 +18,9 @@ platforms:
       ssh.remote_user: 'vagrant'
       synced_folder: true
     box: generic/ubuntu2004
-    box_version: v4.2.16
-    memory: 512
-    cpus: 1
+    box_version: 4.2.16
+    memory: 2048
+    cpus: 2
 provisioner:
   name: ansible
 verifier:
