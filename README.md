@@ -50,7 +50,7 @@ This dict sets any config under the `config` section of a network member. See [h
 
 This dict contains configuration for [ZeroTier Local Configuration](https://docs.zerotier.com/zerotier/zerotier.conf/#local-configuration-options) (aka local.conf). It simply converts the YAML entered here to JSON and saves it as local.conf.
 
-## Example Deployment
+## Example Configuration
 
 ```yaml
 zerotier_version: 1.10.6
