@@ -28,4 +28,6 @@ blocks:
             - sem-version python 3.9
             - python --version
             - pip3 install -r molecule/requirements.txt
+            - sudo apt-get install -y qemu libvirt-daemon-system libvirt-dev ebtables libguestfs-tools ruby-fog-libvirt
+            - vagrant plugin install vagrant-libvirt
             - molecule test
