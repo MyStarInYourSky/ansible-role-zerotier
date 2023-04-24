@@ -18,5 +18,6 @@ blocks:
             - cd ${ANSIBLE_PROJECT}
             - ls -la
             - cd ansible-role-zerotier
+            - sem-version python 3.9
             - python --version
             - pip3 install -r molecule/requirements.txt
