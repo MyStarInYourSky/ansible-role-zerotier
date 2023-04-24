@@ -1,2 +1,3 @@
 molecule==4.0.4
 molecule-plugins[vagrant]==23.0.0
+python-vagrant==1.0.0
