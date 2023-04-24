@@ -8,6 +8,9 @@ blocks:
   - name: Install Ansible Molecule
     task:
       jobs:
-        - name: Install python requirements
-          commands:
+        commands:
+            - chmod 0600 ~/.ssh/id_ed25519.pub ~/.ssh/id_ed25519
+            - ssh-add ~/.ssh/id_ed25519
+            - checkout
+            - cd ${ANSIBLE_PROJECT}
             - pip3 install -r molecule/requirements.txt
