@@ -19,7 +19,8 @@ blocks:
             - ssh-add ~/.ssh/id_ed25519
             - wget https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip
             - unzip vagrant_${VAGRANT_VERSION}_linux_amd64.zip
-            - mv vagrant /usr/local/bin/
+            - sudo mv vagrant /usr/local/bin/
+            - rm vagrant_${VAGRANT_VERSION}_linux_amd64.zip
             - checkout
             - cd ${ANSIBLE_PROJECT}
             - mv ansible-role-zerotier zerotier
