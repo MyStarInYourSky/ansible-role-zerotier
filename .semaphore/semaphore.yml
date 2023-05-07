@@ -1,4 +1,5 @@
-version: "v1.0"
+---
+version: v1.0
 name: Ansible Molecule
 agent:
   machine:
@@ -9,15 +10,16 @@ blocks:
     task:
       env_vars:
         - name: VAGRANT_VERSION
-          value: "2.3.4"
+          value: 2.3.4
       secrets:
         - name: SSH_KEY
       jobs:
-        - name: 'Run Ansible'
+        - name: Run Ansible
           commands:
             - chmod 0600 ~/.ssh/id_ed25519.pub ~/.ssh/id_ed25519
             - ssh-add ~/.ssh/id_ed25519
-            - wget https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip
+            - wget
+              https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip
             - unzip vagrant_${VAGRANT_VERSION}_linux_amd64.zip
             - sudo mv vagrant /usr/local/bin/
             - rm vagrant_${VAGRANT_VERSION}_linux_amd64.zip
@@ -28,12 +30,16 @@ blocks:
             - sem-version python 3.9
             - python --version
             - pip3 install -r molecule/requirements.txt
-            - sudo apt-get install -y qemu libvirt-daemon-system libvirt-dev ebtables libguestfs-tools ruby-fog-libvirt jq
+            - sudo apt-get install -y qemu libvirt-daemon-system libvirt-dev
+              ebtables libguestfs-tools ruby-fog-libvirt jq
             - vagrant plugin install vagrant-libvirt
             - cd molecule/default
             - echo "$ANSIBLE_CRYPT" | base64 -d > var_secret
-            - ansible-vault decrypt env.yaml.j2 --vault-password-file ./var_secret
+            - ansible-vault decrypt env.yaml.j2 --vault-password-file
+              ./var_secret
             - cd ../../
-            - ZEROTIER_API_KEY=$(curl -s --header "Authorization: token {{ZEROTIER_ACCOUNT_API_KEY}}" -X GET https://api.zerotier.com/api/v1/randomToken | jq -r '.token')
+            - ZEROTIER_API_KEY=$(curl -s --header "Authorization: token
+                {{ZEROTIER_ACCOUNT_API_KEY}}" -X GET
+                https://api.zerotier.com/api/v1/randomToken | jq -r '.token')
             - jinja2-render -f env.yaml.j2 -o env.yaml
             - molecule --env-file env.yaml test
