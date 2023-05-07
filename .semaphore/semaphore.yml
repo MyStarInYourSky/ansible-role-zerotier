@@ -13,6 +13,7 @@ blocks:
           value: 2.3.4
       secrets:
         - name: SSH_KEY
+        - name: ZEROTIER_DEV
       jobs:
         - name: Run Ansible
           commands:
