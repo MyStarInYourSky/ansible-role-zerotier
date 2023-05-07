@@ -27,10 +27,9 @@ blocks:
             - mv ansible-role-zerotier zerotier
             - cd zerotier
             - sem-version python 3.9
-            - python --version
             - pip3 install -r molecule/requirements.txt
-            - sudo apt-get install -y qemu libvirt-daemon-system libvirt-dev
-              ebtables libguestfs-tools ruby-fog-libvirt jq
+            - sudo apt-get update
+            - sudo apt-get install -y qemu libvirt-daemon-system libvirt-dev ebtables libguestfs-tools ruby-fog-libvirt jq
             - vagrant plugin install vagrant-libvirt
             - cd molecule/default
             - echo "$ANSIBLE_CRYPT" | base64 -d > var_secret
