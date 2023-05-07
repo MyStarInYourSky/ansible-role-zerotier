@@ -28,6 +28,12 @@ blocks:
             - sem-version python 3.9
             - python --version
             - pip3 install -r molecule/requirements.txt
-            - sudo apt-get install -y qemu libvirt-daemon-system libvirt-dev ebtables libguestfs-tools ruby-fog-libvirt
+            - sudo apt-get install -y qemu libvirt-daemon-system libvirt-dev ebtables libguestfs-tools ruby-fog-libvirt jq
             - vagrant plugin install vagrant-libvirt
-            - molecule test
+            - cd molecule/default
+            - echo "$ANSIBLE_CRYPT" | base64 -d > var_secret
+            - ansible-vault decrypt env.yaml.j2 --vault-password-file ./var_secret
+            - cd ../../
+            - ZEROTIER_API_KEY=$(curl -s --header "Authorization: token {{ZEROTIER_ACCOUNT_API_KEY}}" -X GET https://api.zerotier.com/api/v1/randomToken | jq -r '.token')
+            - jinja2-render -f env.yaml.j2 -o env.yaml
+            - molecule --env-file env.yaml test
