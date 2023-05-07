@@ -1,4 +1,4 @@
 molecule==4.0.4
 molecule-plugins[vagrant]==23.0.0
 python-vagrant==1.0.0
-jinja2-render==1.3
+jinja2-cli==0.8.2
