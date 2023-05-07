@@ -18,8 +18,7 @@ blocks:
           commands:
             - chmod 0600 ~/.ssh/id_ed25519.pub ~/.ssh/id_ed25519
             - ssh-add ~/.ssh/id_ed25519
-            - wget
-              https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip
+            - wget https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_linux_amd64.zip
             - unzip vagrant_${VAGRANT_VERSION}_linux_amd64.zip
             - sudo mv vagrant /usr/local/bin/
             - rm vagrant_${VAGRANT_VERSION}_linux_amd64.zip
@@ -35,11 +34,8 @@ blocks:
             - vagrant plugin install vagrant-libvirt
             - cd molecule/default
             - echo "$ANSIBLE_CRYPT" | base64 -d > var_secret
-            - ansible-vault decrypt env.yaml.j2 --vault-password-file
-              ./var_secret
+            - ansible-vault decrypt env.yaml.j2 --vault-password-file ./var_secret
             - cd ../../
-            - export ZEROTIER_API_KEY=$(curl -s --header "Authorization: token
-                {{ZEROTIER_ACCOUNT_API_KEY}}" -X GET
-                https://api.zerotier.com/api/v1/randomToken | jq -r '.token')
+            - export ZEROTIER_API_KEY=$(curl -s --header "Authorization: token {{ZEROTIER_ACCOUNT_API_KEY}}" -X GET https://api.zerotier.com/api/v1/randomToken | jq -r '.token')
             - jinja2-render -f env.yaml.j2 -o env.yaml
             - molecule --env-file env.yaml test
