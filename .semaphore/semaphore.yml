@@ -36,6 +36,6 @@ blocks:
             - echo "$ANSIBLE_CRYPT" | base64 -d > var_secret
             - ansible-vault decrypt env.yaml.j2 --vault-password-file ./var_secret
             - cd ../../
-            - export ZEROTIER_API_KEY=$(curl -s --header "Authorization: token {{ZEROTIER_ACCOUNT_API_KEY}}" -X GET https://api.zerotier.com/api/v1/randomToken | jq -r '.token')
-            - jinja2-render -f env.yaml.j2 -o env.yaml
+            - curl -s --header "Authorization: token {{ZEROTIER_ACCOUNT_API_KEY}}" -X GET https://api.zerotier.com/api/v1/randomToken | jq -r '.token' > token
+            - ZEROTIER_API_KEY=$(echo token) jinja2-render -f env.yaml.j2 -o env.yaml
             - molecule --env-file env.yaml test
