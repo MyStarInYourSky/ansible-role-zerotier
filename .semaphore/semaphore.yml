@@ -37,6 +37,6 @@ blocks:
             - ansible-vault decrypt ../env.yaml.j2 --vault-password-file ./var_secret
             - jinja2 -D ZEROTIER_ACCOUNT_API_KEY=$ZEROTIER_ACCOUNT_API_KEY auth_headers.j2 > auth_headers
             - curl -s -H @auth_headers -X GET https://api.zerotier.com/api/v1/randomToken | jq -r '.token' > token
-            - jinja2 -D ZEROTIER_API_KEY=$(cat token) env.yaml.j2 > env.yaml
+            - jinja2 -D ZEROTIER_API_KEY=$(cat token) ../env.yaml.j2 > ../env.yaml
             - cd ../../
             - molecule --env-file molecule/env.yaml test
