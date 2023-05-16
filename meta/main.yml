@@ -1,5 +1,4 @@
 name: "zerotier"
-readme: "README.md"
 authors:
     - "MyStarInYourSky (https://github.com/MyStarInYourSky)"
 dependencies: []
