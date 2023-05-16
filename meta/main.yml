@@ -1,6 +1,4 @@
 name: "zerotier"
-authors:
-    - "MyStarInYourSky (https://github.com/MyStarInYourSky)"
 dependencies: []
 license:
     - "MIT"
