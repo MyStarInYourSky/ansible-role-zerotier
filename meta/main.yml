@@ -1,7 +1,5 @@
 name: "zerotier"
 dependencies: []
-license:
-    - "MIT"
 tags:
     - zerotier
     - vpn
