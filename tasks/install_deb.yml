@@ -19,3 +19,4 @@
     name: zerotier-one={{zerotier_version}}
     state: present
     update_cache: yes
+    allow_downgrade: yes
