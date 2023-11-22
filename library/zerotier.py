@@ -207,7 +207,7 @@ class ZeroTierNode(object):
                 self.result['changed'] = True
                 return True
         except Exception as e:
-            self.module.fail_json(changed=False, msg="Unable to set config of ZeroTier node " + self.node, reason=str(e))
+            self.module.fail_json(changed=False, msg="Unable to set config of ZeroTier node " + self.nodename, reason=str(e))
 
     def getNodeConfig(self, network):
         """
