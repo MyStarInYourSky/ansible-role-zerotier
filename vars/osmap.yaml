@@ -36,6 +36,12 @@ Debian:
       - gpg
       - gnupg2
       - python3-psutil
+  bookworm:
+    zerotier_repo: deb https://download.zerotier.com/debian/bookworm bookworm main
+    packages:
+      - gpg
+      - gnupg2
+      - python3-psutil
 CentOS:
   "8":
     zerotier_repo: http://download.zerotier.com/redhat/el/8
