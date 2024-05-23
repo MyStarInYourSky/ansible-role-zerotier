@@ -26,6 +26,6 @@
 
 - name: Setup ZeroTier Network 
   zerotier:
-    name: "{{inventory_hostname}}"
-    networks: "{{zerotier_networks | default({})}}"
-    
+    name: "{{ inventory_hostname }}"
+    networks: "{{ zerotier_networks | default({}) }}"
+    local_api_address: "{{ zerotier_local_api_address }}"
