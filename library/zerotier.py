@@ -73,11 +73,11 @@ class ZeroTierNode(object):
     """
 
     def __init__(self, module):
-        self.local_api_url = "http://localhost:9993"
         self.api_url = "https://api.zerotier.com"
         self.module = module
         self.nodename = module.params['name']
         self.networks = module.params['networks']
+        self.local_api_url = f"http://{module.params['local_api_address']}"
 
         # Set Defaults
         self.result = {}
@@ -282,6 +282,7 @@ def main():
         argument_spec=dict(
             name=dict(type='str', required=True),
             networks=dict(type='dict', required=False, default={}),
+            local_api_address=dict(type='str', required=False, default="localhost:9993"),
         ),
         supports_check_mode=True,
     )
