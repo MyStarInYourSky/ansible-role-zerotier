@@ -4,3 +4,4 @@ zerotier_repo:
 zerotier_version: 1.4.6
 zerotier_networks: {}
 zerotier_localconfig: {}
+zerotier_local_api_address: "localhost:9993"
