@@ -17,6 +17,12 @@ Ubuntu:
       - gpg
       - gnupg2
       - python3-psutil
+  noble:
+    zerotier_repo: deb https://download.zerotier.com/debian/noble noble main
+    packages:
+      - gpg
+      - gnupg2
+      - python3-psutil
 Debian:
   bullseye:
     zerotier_repo: deb https://download.zerotier.com/debian/bullseye bullseye main
